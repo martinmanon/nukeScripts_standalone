@@ -1,47 +1,46 @@
- set cut_paste_input [stack 0]
-version 6.3 v1
+set cut_paste_input [stack 0]
+version 13.0 v4
 push $cut_paste_input
 Camera2 {
-translate {{curve x1 5.579999924 x33 7.577629566 x66 6.912240505 x100
-7.475720882} {curve x1 3.619999886 x33 2.726438046 x66 2.297854662 x100
--1.248544455} {curve x1 0 x33 -3.644165516 x66 -7.961611748 x100
--11.54109287}}
-rotate {{curve x1 -11.80996483 x33 -4.06994879 x66 -17.03772759 x100
--44.08487885} {curve x1 -18.77281591 x33 -2.666896453 x66 -4.601900571 x100
--10.39448497} {curve x1 1.217797543 x33 8.694029974 x66 9.037508234 x100
-12.06867191}}
-name CameraB
-selected true
-xpos -1351
-ypos 32
+ translate {{curve x1 0 x33 -0.9430168271 x66 0.05442454293 x100 -2.200000048} {curve x1 0 x33 1.117744684 x66 2.15690279 x100 3.299999952} {curve x1 0 x33 -4.26999712 x66 -8.501599312 x100 -12.14000034}}
+ rotate {{curve x1 0 x33 -2.149965966 x66 16.17216845 x100 25.75055595} {curve x1 0 x33 11.63876614 x66 3.188414907 x100 29.54284944} {curve x1 0 x33 -12.90802361 x66 -5.010731362 x100 -0.5604851632}}
+ name CameraA
+ selected true
+ xpos -15
+ ypos -242
 }
 Camera2 {
-inputs 0
-translate {{CameraA.translate.x*(1-camweight)+CameraB.translate.x*camweight}
-{CameraA.translate.y*(1-camweight)+CameraB.translate.y*camweight}
-{CameraA.translate.z*(1-camweight)+CameraB.translate.z*camweight}}
-rotate {{CameraA.rotate.x*(1-camweight)+CameraB.rotate.x*camweight}
-{CameraA.rotate.y*(1-camweight)+CameraB.rotate.y*camweight}
-{CameraA.rotate.z*(1-camweight)+CameraB.rotate.z*camweight}}
-name AverageCamera
-selected true
-xpos -1436
-ypos -98
-addUserKnob {20 User}
-addUserKnob {7 camweight l "Camera Weight" t "Weight value of average:\n0 =
-Camera A\n1 = Camera B\nValues in between are a mix of the two"}
-camweight {{curve x1 0 x50 1 x100 0}}
+ inputs 0
+ translate {{curve x1 5.579999924 x33 7.577629566 x66 6.912240505 x100 7.475720882} {curve x1 3.619999886 x33 2.726438046 x66 2.297854662 x100 -1.248544455} {curve x1 0 x33 -3.644165516 x66 -7.961611748 x100 -11.54109287}}
+ rotate {{curve x1 -11.80996483 x33 -4.06994879 x66 -17.03772759 x100 -44.08487885} {curve x1 -18.77281591 x33 -2.666896453 x66 -4.601900571 x100 -10.39448497} {curve x1 1.217797543 x33 8.694029974 x66 9.037508234 x100 12.06867191}}
+ name CameraB
+ selected true
+ xpos 168
+ ypos -248
 }
 Camera2 {
-inputs 0
-translate {{curve x1 0 x33 -0.9430168271 x66 0.05442454293 x100 -2.200000048}
-{curve x1 0 x33 1.117744684 x66 2.15690279 x100 3.299999952} {curve x1 0 x33
--4.26999712 x66 -8.501599312 x100 -12.14000034}}
-rotate {{curve x1 0 x33 -2.149965966 x66 16.17216845 x100 25.75055595} {curve
-x1 0 x33 11.63876614 x66 3.188414907 x100 29.54284944} {curve x1 0 x33
--12.90802361 x66 -5.010731362 x100 -0.5604851632}}
-name CameraA
-selected true
-xpos -1531
-ypos 35
+ inputs 0
+ translate {{CameraA.translate.x*(1-camweightTX)+CameraB.translate.x*camweightTX} {CameraA.translate.y*(1-camweightTY)+CameraB.translate.y*camweightTY} {CameraA.translate.z*(1-camweightTZ)+CameraB.translate.z*camweightTZ}}
+ rotate {{CameraA.rotate.x*(1-camweightRX)+CameraB.rotate.x*camweightRX} {CameraA.rotate.y*(1-camweightRY)+CameraB.rotate.y*camweightRY} {CameraA.rotate.z*(1-camweightRZ)+CameraB.rotate.z*camweightRZ}}
+ focal {{parent.CameraA.focal}}
+ haperture {{parent.CameraA.haperture}}
+ vaperture {{parent.CameraA.vaperture}}
+ near {{parent.CameraA.near}}
+ far {{parent.CameraA.far}}
+ win_translate {{parent.CameraA.win_translate} {parent.CameraA.win_translate}}
+ win_scale {{parent.CameraA.win_scale} {parent.CameraA.win_scale}}
+ winroll {{parent.CameraA.winroll}}
+ focal_point {{parent.CameraA.focal_point}}
+ fstop {{parent.CameraA.fstop}}
+ name AverageCamera
+ selected true
+ xpos 81
+ ypos -49
+ addUserKnob {20 User}
+ addUserKnob {7 camweightTX l "Camera Weight TransfX" t "Weight value of average:\n0 =\nCamera A\n1 = Camera B\nValues in between are a mix of the two"}
+ addUserKnob {7 camweightTY l "Camera Weight TransfY"}
+ addUserKnob {7 camweightTZ l "Camera Weight TransfZ"}
+ addUserKnob {7 camweightRX l "Camera Weight RotationX"}
+ addUserKnob {7 camweightRY l "Camera Weight RotationY"}
+ addUserKnob {7 camweightRZ l "Camera Weight RotationZ"}
 }
