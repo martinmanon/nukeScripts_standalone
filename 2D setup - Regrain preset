@@ -1,0 +1,1443 @@
+set cut_paste_input [stack 0]
+version 11.2 v5
+BackdropNode {
+ inputs 0
+ name BackdropNode14
+ tile_color 0x212121ff
+ label REGRAIN
+ note_font "Bitstream Vera Sans"
+ note_font_size 42
+ selected true
+ xpos 1690
+ ypos 1444
+ bdwidth 986
+ bdheight 551
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode15
+ tile_color 0x4e7c99ff
+ label DENOISE
+ note_font_size 20
+ selected true
+ xpos 2119
+ ypos 1527
+ bdheight 184
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode16
+ tile_color 0xffd455ff
+ label SCAN
+ note_font_size 20
+ selected true
+ xpos 1919
+ ypos 1536
+ bdheight 164
+ z_order 1
+}
+StickyNote {
+ inputs 0
+ name StickyNote1
+ tile_color 0xe9ff55ff
+ label "1- Launch the analyse.\n2- In the \"Adjust\" tab, clean the \"response curves\".\n3- In the \"Replace\" tab, find a good area for the grain sampling."
+ note_font_size 25
+ note_font_color 0xffffff01
+ selected true
+ xpos 1694
+ ypos 1347
+}
+Dot {
+ inputs 0
+ name Dot7
+ label denoise
+ note_font "italic Italic Italic Italic Italic Italic"
+ note_font_size 33
+ selected true
+ xpos 2164
+ ypos 1502
+ hide_input true
+ addUserKnob {20 User}
+ addUserKnob {26 child}
+}
+PostageStamp {
+ name PostageStamp2
+ selected true
+ xpos 2130
+ ypos 1609
+ postage_stamp true
+}
+Dot {
+ name Dot34
+ selected true
+ xpos 2164
+ ypos 1717
+}
+set N127356f0 [stack 0]
+push $cut_paste_input
+Dot {
+ name Dot8
+ label comp
+ note_font "italic Italic Italic Italic Italic Italic"
+ note_font_size 33
+ selected true
+ xpos 2509
+ ypos 1560
+ hide_input true
+ addUserKnob {20 User}
+ addUserKnob {26 child}
+}
+Dot {
+ name Dot36
+ selected true
+ xpos 2509
+ ypos 1717
+}
+set N7a21300 [stack 0]
+Group {
+ inputs 2
+ name DiffCheck2
+ selected true
+ xpos 2355
+ ypos 1714
+ addUserKnob {20 CommonKey l DiffCheck}
+ addUserKnob {41 tolerance T MergeExpression1.tolerance}
+}
+ Input {
+  inputs 0
+  name InputA
+  xpos -190
+  ypos -335
+  number 1
+ }
+ Input {
+  inputs 0
+  name InputB
+  xpos 7
+  ypos -336
+ }
+ MergeExpression {
+  inputs 2
+  expr3 "abs(Br-Ar) > tolerance || abs(Bg-Ag) > tolerance || abs(Bb-Ab)\n > tolerance?1:0"
+  name MergeExpression1
+  xpos -98
+  ypos -266
+  addUserKnob {20 User}
+  addUserKnob {7 tolerance R 0 0.1}
+  tolerance 0.0001
+ }
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name Shuffle1
+  xpos -98
+  ypos -242
+ }
+ Clamp {
+  name Clamp1
+  xpos -98
+  ypos -211
+ }
+ Output {
+  name Output1
+  xpos -98
+  ypos -99
+ }
+end_group
+push $N127356f0
+Dot {
+ inputs 0
+ name Dot9
+ label scan
+ note_font "italic Italic Italic Italic Italic Italic Italic"
+ note_font_size 33
+ selected true
+ xpos 1962
+ ypos 1504
+ hide_input true
+ addUserKnob {20 User}
+ addUserKnob {26 child}
+}
+PostageStamp {
+ name PostageStamp1
+ selected true
+ xpos 1928
+ ypos 1608
+ postage_stamp true
+}
+Dot {
+ name Dot35
+ selected true
+ xpos 1962
+ ypos 1798
+}
+push $N7a21300
+Group {
+ inputs 4
+ name DasGrain1
+ onCreate "import random\n\ntestimonials = \[\n    \"Such an elegant solution, love it!\",\n    \"Your gizmo is beyond expectation\",\n    \"Totally awesome!\",\n    \"DasGrain is officially the best thing ever\",\n    \"It's really working!\",\n    \"Das bringt Tränen in meine Augen\",\n    \"DasGrain is the salvation we waited for\",\n    \"It's really working\",\n    \"I save a lot of time, and definitely my nerves :)\"\n    ]\n\nnuke.thisNode()\['testimonial'].setValue('«%s»' % random.choice(testimonials))"
+ tile_color 0x7f7f7fff
+ selected true
+ xpos 2475
+ ypos 1790
+ addUserKnob {20 Analyse_tab l Analyse}
+ addUserKnob {41 output T Output.output}
+ addUserKnob {26 ""}
+ addUserKnob {3 number_of_frames l "number of frames" t "Set the number of sample frames to be spread across the input range.\n\nMore frames lead to higher accuracy.\n\nIf there are particularly bright or dark frames, set them manually in the knob below.\n\nIf you want to set all sample frames manually, set this to 0 and add the frames in the knob below."}
+ number_of_frames 10
+ addUserKnob {1 additional_frames l "additional frames" t "Set additional frames like this:\n\n1001,1020,1053 (single frames)\n1020-1040 (frame ranges)\n1020-1040x4 (frame ranges with step)"}
+ addUserKnob {3 sample_count l "sample count" t "The samples are spread across the sample range (which gets calculated automatically) based on the Alexa log curve. This results in more samples in the dark areas and less samples in the brights.\n\nMore samples lead to a more detailed response curve."}
+ sample_count 20
+ addUserKnob {22 analyse l Analyse t "this is where the magic happens" T "import nuke\n\n\ndef _sample_count(this):\n\n    # returns the sample count\n\n    sample_count = int(this\['sample_count'].value())\n    if sample_count <= 0:\n        raise RuntimeError('Enter a sample count greater than 0')\n    \n    else:\n\n        return sample_count\n\n\ndef _generate_frame_list(this):\n\n    # converts the frames submitted by the user into a list\n\n    frame_list = \[]\n\n    number_of_frames = int(this\['number_of_frames'].value())\n    additional_frames = this\['additional_frames'].value()\n\n    if number_of_frames < 1 and additional_frames is '':\n        raise RuntimeError('Either set the number of frames > 0\\nor define additional frames')\n\n    first_frame = max(this.input(1).firstFrame(),\n                      this.input(2).firstFrame())\n    last_frame = min(this.input(1).lastFrame(),\n                     this.input(2).lastFrame())\n\n    if number_of_frames > 0:\n        distance = (last_frame - first_frame) / (number_of_frames)\n        frame = first_frame + distance / 2\n\n        for x in xrange(number_of_frames):\n            int_frame = int(round(frame))\n            if int_frame not in frame_list:\n                frame_list.append(int_frame)\n            frame += distance\n\n    frange = nuke.FrameRanges(additional_frames.split(','))\n    for r in frange:\n        for f in r:\n            if f >= first_frame and f<= last_frame:\n                if f not in frame_list:\n                    frame_list.append(f)\n    return frame_list\n\n\ndef _setup_for_multiframe(frame_list):\n\n    # arranges all sample frames next to each other, starting at frame 0\n    # sets the frame number knob of the FrameBlend node\n\n    tw_lookup = nuke.toNode('TimeWarp1')\['lookup']\n    tw_lookup.clearAnimated()\n    tw_lookup.setAnimated()\n    anim_list = \[]\n    for n in range(0, len(frame_list)):\n        anim_list.append(nuke.AnimationKey(n, frame_list\[n]))\n    anim = tw_lookup.animation(0)\n    anim.addKey(anim_list)\n\n    fb = nuke.toNode('FrameBlend1')\n    fb\['numframes'].setValue(len(frame_list))\n\n\ndef _generate_sample_list(\n    sample_count,\n    sample_range,\n    sample_radius\n    ):\n\n    # generate a list of sample values spread equally between the\n    # min and max values of the sample range\n\n    sample_list = \[]\n    for item in range(0, sample_count):\n        sample_list.append(float(item) / sample_count\n                           * (sample_range\[1] - sample_range\[0])\n                           + sample_range\[0] + sample_radius)\n    return sample_list\n\n\ndef _get_sample_range(\n    channel,\n    channel_list,\n    frame_list\n    ):\n\n    # samples the minimum and maximum values of the given frame range and\n    # sets the sample range to those values\n\n    CurveTool = nuke.toNode('CurveTool_Range')\n    min_knob = CurveTool\['minlumapixvalue']\n    max_knob = CurveTool\['maxlumapixvalue']\n\n    if channel is 'red':\n        min_knob.clearAnimated()\n        max_knob.clearAnimated()\n\n        min_knob.setAnimated()\n        max_knob.setAnimated()\n\n        nuke.execute(CurveTool, 0, len(frame_list) - 1)\n\n    min_list = \[]\n    max_list = \[]\n\n    index = channel_list.index(channel)\n    for key in min_knob.animation(index).keys():\n        min_list.append(key.y)\n\n    for key in max_knob.animation(index).keys():\n        max_list.append(key.y)\n\n    min_value = min(min_list)\n    max_value = max(max_list)\n\n    if channel is 'blue':\n        min_knob.clearAnimated()\n        max_knob.clearAnimated()\n        CurveTool\['minlumapixdata'].clearAnimated()\n        CurveTool\['maxlumapixdata'].clearAnimated()\n\n    return \[min_value, max_value]\n\n\ndef _log2lin(value):\n\n    # converts values from AlexaV3LogC to linear\n\n    if value > 5.367655 * 0.010591 + 0.092809:\n        new_value = (10.0 ** ((value - 0.385537) / 0.247190) -0.052272) / 5.555556\n    else:\n        new_value = (value - 0.092809) / 5.367655\n    return new_value\n\n\ndef _sample_it(\n    Keyer,\n    CurveTool,\n    frame_list,\n    channel_list,\n    channel,\n    sample,\n    sample_radius,\n    ):\n\n    # analyse the grain level per channel and sample value in the sample range\n\n    min = str(sample - sample_radius)\n    max = str(sample + sample_radius)\n    Keyer\['temp_expr0'].setValue(min)\n    Keyer\['temp_expr1'].setValue(max)\n\n    intensity_knob = CurveTool\['intensitydata']\n    intensity_knob.clearAnimated()\n    intensity_knob.setAnimated()\n\n    nuke.execute(CurveTool, len(frame_list) - 1, len(frame_list) - 1)\n    sample_values = intensity_knob.value()\n\n    intensity_knob.clearAnimated()\n\n    if sample_values\[3] > 0:\n        value = sample_values\[0] / sample_values\[3]\n\n        if value > 0:\n           return value\n        else:\n\n            return None\n    else:\n\n        return None\n\n\ndef start():\n\n    # let's do this!\n\n    this = nuke.thisNode()\n\n    if this.input(1) is None:\n        raise RuntimeError('no plate connected')\n    if this.input(2) is None:\n        raise RuntimeError('no degrained plate connected')\n\n    with this:\n        frame_list = _generate_frame_list(this)\n        _setup_for_multiframe(frame_list)\n        sample_count = _sample_count(this)\n\n        blank = '''master \{curve C 0 x0.001 0.001\}\n        red \{curve\}\n        green \{curve\}\n        blue \{curve\}\n        alpha \{curve\}'''\n\n        lut = nuke.toNode('ColorLookup')\['lut']\n        lut.fromScript(blank)\n\n        channel_list = \['red', 'green', 'blue']\n\n        Keyer = nuke.toNode('Expression2')\n        Copy = nuke.toNode('Copy2')\n\n        CurveTool = nuke.toNode('CurveTool')\n\n        task = nuke.ProgressTask('Analysing...')\n        step = 100.0 / 3 / sample_count\n        progress = step\n\n        for channel in channel_list:\n            Copy\['from0'].setValue('rgba.\{\}'.format(channel))\n\n            sample_range = _get_sample_range(channel, channel_list, frame_list)\n            sample_radius = (sample_range\[1] - sample_range\[0]) / sample_count / 2\n            sample_list = _generate_sample_list(sample_count, sample_range, sample_radius)\n\n\n            for sample in sample_list:\n                if task.isCancelled():\n                    return\n\n                task.setProgress(int(progress))\n                task.setMessage('\{\} channel at \{\}'.format(channel, round(_log2lin(sample), 2)))\n\n                value = _sample_it(\n                    Keyer,\n                    CurveTool,\n                    frame_list,\n                    channel_list,\n                    channel,\n                    sample,\n                    sample_radius,\n                    )\n\n                if value is not None:\n                    lut.setValueAt(value, _log2lin(sample),\n                            channel_list.index(channel) + 1)\n\n                progress += step\n\n        tw_lookup = nuke.toNode('TimeWarp1')\['lookup']\n        tw_lookup.clearAnimated()\n       \n        del task\n\n\nstart()\n" +STARTLINE}
+ addUserKnob {26 f l " "}
+ addUserKnob {41 maskChannelMask l "analysis mask" T ChannelMerge1.A}
+ addUserKnob {6 invert_1 l invert -STARTLINE}
+ addUserKnob {20 Adjust_tab l Adjust}
+ addUserKnob {41 output_1 l output T Output.output}
+ addUserKnob {26 ""}
+ addUserKnob {26 text_1 l "grain level" T ""}
+ addUserKnob {7 luminance t "In case there is some luminance grain left in your degrained plate (for example to preserve detail), set the luminance level to 1/(luminance degrain amount) to compensate.\n\nFor example 1/.8 in case the luminance degrain is set to 80%.\n\nDon't forget to use a mask of all areas where you comped in elements." R 1 2}
+ luminance 1
+ addUserKnob {18 RGB t "Adjust the grain level per channel." R 0 2}
+ RGB {1 1 1}
+ addUserKnob {6 RGB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 RGB_panelDropped_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 RGB_panelDropped_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {26 e l " "}
+ addUserKnob {41 maskChannelMask1 l mask T Multiply1.maskChannelMask}
+ addUserKnob {41 invert_mask l invert -STARTLINE T Multiply1.invert_mask}
+ addUserKnob {26 ""}
+ addUserKnob {20 curves l "response curves" n 1}
+ addUserKnob {26 text l "" +STARTLINE T "These are the sampled grain response curves. Their quality depends\nentirely on the quality of the degrain. If the curves look wrong try to\nimprove the degrain first. If they still look wrong and the resulting regrain\ndoesn't work well enough, you can try to improve the curves here. You\ncan also extend the curves if the comp has values that don't exist in\nthe plate.\n\nRule of thumb: The slope of the curves should always be positive.\n"}
+ addUserKnob {41 lut l "" +STARTLINE T ColorLookup.lut}
+ addUserKnob {20 endGroup n -1}
+ addUserKnob {20 Replace_tab l Replace}
+ addUserKnob {41 output_2 l output T Output.output}
+ addUserKnob {26 ""}
+ addUserKnob {6 external_grain l "use external grain" t "Use external grain to replace masked area. Needs to be normalised to +/-0.01.\n\nThe easiest way would be to normalise with a second DasGrain, set its output to 'normalised grain' and connect it to the 'external grain' input of this DasGrain." +STARTLINE}
+ addUserKnob {26 b l " "}
+ addUserKnob {6 scatter t "Activates the scatter function. It generates a new grain based on the grain in the sample box." +STARTLINE}
+ scatter true
+ addUserKnob {15 box l "sample box" t "Define the area that is used as a base for the scatter function. This should be as even as possible, without any plate detail.\n\nIn case there is no suitable area that stays detail free for the whole frame range, you can limit the input range in the knob below."}
+ box {100 100 500 300}
+ addUserKnob {3 input_first l "input range limit"}
+ input_first 1001
+ addUserKnob {3 input_last l "" -STARTLINE}
+ input_last 1100
+ addUserKnob {6 use_range l "use range" t "Limit the input range for the scatter function.\n\nUseful if there is no area that stays detail free for the whole range." -STARTLINE}
+ addUserKnob {22 set_to_current_frame l "set to current frame" t "Enables the range limit and sets both first and last frame to the current frame." T "this = nuke.thisNode()\nthis\['input_first'].setValue(nuke.frame())\nthis\['input_last'].setValue(nuke.frame())\nthis\['use_range'].setValue(True)" +STARTLINE}
+ addUserKnob {26 a l " "}
+ addUserKnob {20 settings l "additional settings" n 1}
+ addUserKnob {6 overlay l "overlay cell pattern" t "Overlay the cell pattern of the voronoy noise. Useful to check where the seams are and if distortion or blending is necessary." +STARTLINE}
+ addUserKnob {7 cell_size l "cell size" t "Cell size of the scatter. Shoudn't be too small, as otherwise the grain structure might break." R 5 100}
+ cell_size 50
+ addUserKnob {26 c l " "}
+ addUserKnob {6 distort l "distort cells" t "Distort the Voronoy cells to conceal seams." +STARTLINE}
+ addUserKnob {7 frequency R 0 100}
+ frequency 15
+ addUserKnob {7 amplitude R 0 100}
+ amplitude 15
+ addUserKnob {26 d l " "}
+ addUserKnob {3 edge_blend_size l "edge blend size" t "Conceals the seams by blending the cells. A value of 2 or 3 should do the trick.\n\nThis is a bit hacky and slow."}
+ addUserKnob {26 tip l "" -STARTLINE T "sloooow - keep this as small as possible"}
+ addUserKnob {20 endGroup_1 l endGroup n -1}
+ addUserKnob {26 g l " "}
+ addUserKnob {41 maskChannelMask_1 l mask -STARTLINE T Merge9.maskChannelMask}
+ addUserKnob {41 invert_mask_1 l invert -STARTLINE T Merge9.invert_mask}
+ addUserKnob {20 Info_tab l Info}
+ addUserKnob {26 testimonial l "" +STARTLINE T "«Such an elegant solution, love it!»"}
+ addUserKnob {26 dasname l "" +STARTLINE T "\n\nDasGrain v1.4"}
+ addUserKnob {26 tutorial l "" +STARTLINE T "<a href=\"https://vimeo.com/284820390/\"><span style=\"color:#C8C8C8;\">https://vimeo.com/284820390/</a>"}
+ addUserKnob {26 info l "" +STARTLINE T "\n\nLast change: 2019-02-13\n\nFabian Holtz"}
+ addUserKnob {26 mail l "" +STARTLINE T "<a href=\"mailto:holtzf+nuke@gmail.com\"><span style=\"color:#C8C8C8;\">holtzf+nuke@gmail.com</a>"}
+ addUserKnob {26 credit l "" +STARTLINE T "\n----------\n\nVoronoyScatter based on Cell_Noise by Matthew Shaw."}
+ addUserKnob {26 website l "" +STARTLINE T "<a href=\"https://gizmosandgames.com/2016/09/05/cellular-noise/\"><span style=\"color:#C8C8C8;\">https://gizmosandgames.com/2016/09/05/cellular-noise/</a>"}
+}
+ BackdropNode {
+  inputs 0
+  name BackdropNode1
+  tile_color 0x7f7f7fff
+  label "normalise grain"
+  note_font_size 30
+  xpos 280
+  ypos 1470
+  bdwidth 320
+  bdheight 110
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode11
+  tile_color 0x7f7f7fff
+  label "add grain"
+  note_font_size 30
+  xpos 830
+  ypos 2838
+  bdwidth 320
+  bdheight 110
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode13
+  tile_color 0x7f7f7fff
+  label scatter
+  note_font_size 30
+  xpos -50
+  ypos 2190
+  bdwidth 320
+  bdheight 110
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode14
+  tile_color 0x7f7f7fff
+  label "analyse grain"
+  note_font_size 30
+  xpos -49
+  ypos 606
+  bdwidth 319
+  bdheight 720
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode2
+  tile_color 0x7f7f7fff
+  label "grain response curve"
+  note_font_size 30
+  xpos 610
+  ypos 2646
+  bdwidth 320
+  bdheight 110
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode3
+  tile_color 0x7f7f7fff
+  label "RGB level"
+  note_font_size 30
+  xpos 60
+  ypos 1926
+  bdwidth 320
+  bdheight 110
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode4
+  tile_color 0x7f7f7fff
+  label "grain response curve"
+  note_font_size 30
+  xpos 610
+  ypos 1230
+  bdwidth 320
+  bdheight 110
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode5
+  tile_color 0x7f7f7fff
+  label "adapt grain"
+  note_font_size 30
+  xpos 280
+  ypos 2646
+  bdwidth 320
+  bdheight 110
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode6
+  tile_color 0x7f7f7fff
+  label "sample range"
+  note_font_size 30
+  xpos -380
+  ypos 606
+  bdwidth 320
+  bdheight 160
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode7
+  tile_color 0x7f7f7fff
+  label "luminance level"
+  note_font_size 30
+  xpos 280
+  ypos -282
+  bdwidth 760
+  bdheight 685
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode8
+  tile_color 0x7f7f7fff
+  label "original grain"
+  note_font_size 30
+  xpos 280
+  ypos 606
+  bdwidth 320
+  bdheight 110
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode9
+  tile_color 0x7f7f7fff
+  label replace
+  note_font_size 30
+  xpos 60
+  ypos 2359
+  bdwidth 540
+  bdheight 226
+ }
+ Input {
+  inputs 0
+  name mask
+  label "\[value number]"
+  note_font_size 30
+  xpos 1170
+  ypos -440
+  number 3
+ }
+ Dot {
+  name Dot39
+  xpos 1204
+  ypos 258
+ }
+set Nfd38d750 [stack 0]
+ Dot {
+  name Dot26
+  xpos 1204
+  ypos 1074
+ }
+set Nfd391fa0 [stack 0]
+ Dot {
+  name Dot38
+  xpos 1204
+  ypos 2010
+ }
+ Dot {
+  name Dot37
+  xpos 544
+  ypos 2010
+ }
+set Nfd39aec0 [stack 0]
+ Dot {
+  name Dot22
+  xpos 544
+  ypos 2439
+ }
+set Nfd39f760 [stack 0]
+ Dot {
+  name Dot20
+  xpos 544
+  ypos 2559
+ }
+push $Nfd39f760
+ Dot {
+  name Dot17
+  xpos 434
+  ypos 2439
+ }
+set Nfd3a85f0 [stack 0]
+ Dot {
+  name Dot13
+  xpos 214
+  ypos 2439
+ }
+ Input {
+  inputs 0
+  name external_grain
+  label "\[value number]"
+  note_font_size 30
+  xpos -150
+  ypos 1768
+  number 4
+ }
+ Dot {
+  name Dot21
+  xpos -116
+  ypos 2106
+ }
+ Input {
+  inputs 0
+  name DEGRAINED_PLATE
+  label "\[value number]"
+  note_font_size 30
+  xpos 730
+  ypos -440
+  number 2
+ }
+ Dot {
+  name Dot28
+  xpos 764
+  ypos -198
+ }
+set Nfd3bea70 [stack 0]
+ Dot {
+  name Dot32
+  xpos 764
+  ypos 234
+ }
+set Nfd3c2f90 [stack 0]
+push $Nfd3bea70
+ Dot {
+  name Dot27
+  xpos 624
+  ypos -198
+ }
+ Colorspace {
+  colorspace_out YCbCr
+  name Colorspace1
+  xpos 590
+  ypos -130
+ }
+ Dot {
+  name Dot7
+  xpos 624
+  ypos -54
+ }
+set Nfd3e1f50 [stack 0]
+ Input {
+  inputs 0
+  name PLATE
+  label "\[value number]"
+  note_font_size 30
+  xpos 290
+  ypos -440
+  number 1
+ }
+ Dot {
+  name Dot29
+  xpos 324
+  ypos -198
+ }
+set Nfd3eb300 [stack 0]
+ Dot {
+  name Dot6
+  xpos 464
+  ypos -198
+ }
+ Colorspace {
+  colorspace_out YCbCr
+  name Colorspace2
+  xpos 430
+  ypos -130
+ }
+ Merge2 {
+  inputs 2
+  operation from
+  bbox B
+  Achannels rgb
+  Bchannels rgb
+  output rgb
+  name Merge4
+  xpos 430
+  ypos -58
+ }
+ Multiply {
+  channels rgb
+  value {{parent.luminance-1} 0 0 0}
+  name Multiply6
+  xpos 430
+  ypos 14
+ }
+ Dot {
+  name Dot31
+  xpos 464
+  ypos 90
+ }
+push $Nfd3e1f50
+ Merge2 {
+  inputs 2
+  operation plus
+  bbox B
+  Achannels rgb
+  Bchannels rgb
+  output rgb
+  name Merge5
+  xpos 590
+  ypos 86
+ }
+ Colorspace {
+  colorspace_in YCbCr
+  name Colorspace3
+  xpos 590
+  ypos 158
+ }
+ Merge2 {
+  inputs 2
+  operation from
+  bbox B
+  Achannels rgb
+  Bchannels rgb
+  output rgb
+  name Merge6
+  xpos 590
+  ypos 230
+ }
+ Dot {
+  name Dot35
+  xpos 624
+  ypos 306
+ }
+set Nfd2e2ea0 [stack 0]
+push $Nfd3c2f90
+ Merge2 {
+  inputs 2
+  operation from
+  bbox B
+  Achannels rgb
+  Bchannels rgb
+  output rgb
+  name Merge7
+  xpos 730
+  ypos 302
+ }
+ Dot {
+  name Dot2
+  xpos 764
+  ypos 522
+ }
+set Nfd2f7440 [stack 0]
+ ColorLookup {
+  channels rgb
+  name ColorLookup
+  xpos 730
+  ypos 1304
+ }
+ set Cfd2fc780 [stack 0]
+ Dot {
+  name Dot24
+  xpos 764
+  ypos 1554
+ }
+ Expression {
+  temp_name0 target
+  temp_expr0 .01
+  expr0 target/r
+  expr1 target/g
+  expr2 target/b
+  channel3 none
+  name Expression
+  xpos 400
+  ypos 1550
+ }
+push $Nfd2f7440
+ Dot {
+  name Dot30
+  xpos 544
+  ypos 690
+ }
+push $Nfd3eb300
+ Merge2 {
+  inputs 2
+  operation from
+  bbox B
+  Achannels rgb
+  Bchannels rgb
+  output rgb
+  name Merge27
+  xpos 290
+  ypos 686
+  bookmark true
+ }
+ Dot {
+  name Dot3
+  xpos 324
+  ypos 786
+ }
+set Nfd1b1f40 [stack 0]
+ Dot {
+  name Dot33
+  xpos 324
+  ypos 1386
+ }
+set Nfd1b6790 [stack 0]
+ Merge2 {
+  inputs 2
+  operation multiply
+  bbox B
+  Achannels rgb
+  Bchannels rgb
+  output rgb
+  name Merge2
+  xpos 290
+  ypos 1550
+ }
+ Dot {
+  name Dot15
+  xpos 324
+  ypos 1650
+ }
+set Nfd1cad90 [stack 0]
+ Dot {
+  name Dot25
+  xpos 104
+  ypos 1650
+ }
+set Nfd1cfa20 [stack 0]
+ Multiply {
+  channels rgb
+  value {{parent.RGB} {parent.RGB} {parent.RGB} 0}
+  name Multiply3
+  xpos 70
+  ypos 2006
+ }
+ Switch {
+  inputs 2
+  which {{parent.external_grain}}
+  name Switch2
+  xpos 70
+  ypos 2102
+ }
+ Group {
+  name VoronoyScatter
+  selected true
+  xpos 70
+  ypos 2270
+  disable {{!parent.scatter}}
+  addUserKnob {20 User}
+  addUserKnob {3 input_first l "input range"}
+  input_first {{parent.input_first}}
+  addUserKnob {3 input_last l "" -STARTLINE}
+  input_last {{parent.input_last}}
+  addUserKnob {6 use_range l "use range" -STARTLINE}
+  use_range {{parent.use_range}}
+  addUserKnob {3 f l "" +STARTLINE}
+  f {{use_range?int((x-input_first)%(input_last+1-input_first)+input_first):x}}
+  addUserKnob {15 box}
+  box {{parent.box(f)} {parent.box(f)} {parent.box(f)} {parent.box(f)}}
+  addUserKnob {26 a l " "}
+  addUserKnob {20 settings l "additional settings" n 1}
+  addUserKnob {6 overlay_pattern l "overlay pattern" +STARTLINE}
+  overlay_pattern {{parent.overlay}}
+  addUserKnob {41 cell_size l "cell size" T Voronoy.size}
+  addUserKnob {41 z T Voronoy.z}
+  addUserKnob {26 b l " "}
+  addUserKnob {6 distort l "distort cells" +STARTLINE}
+  distort {{parent.distort}}
+  addUserKnob {7 frequency R 0 100}
+  frequency {{parent.frequency}}
+  addUserKnob {7 amplitude R 0 100}
+  amplitude {{parent.amplitude}}
+  addUserKnob {26 c l " "}
+  addUserKnob {3 edge_blend_size l "edge blend size"}
+  edge_blend_size {{parent.edge_blend_size}}
+  addUserKnob {20 endGroup n -1}
+ }
+  Reformat {
+   inputs 0
+   type "to box"
+   box_width {{Input1.width}}
+   box_height {{Input1.height}}
+   box_fixed true
+   box_pixel_aspect {{Input1.pixel_aspect}}
+   black_outside true
+   name Reformat1
+   xpos 510
+   ypos -437
+  }
+  Dot {
+   name Dot6
+   xpos 544
+   ypos -366
+  }
+set Nfd0836b0 [stack 0]
+  Dot {
+   name Dot7
+   xpos 874
+   ypos -366
+  }
+set Nfd087f80 [stack 0]
+  Noise {
+   size {{parent.Noise1.size} {parent.Noise1.size}}
+   zoffset {{x+10}}
+   center {960 453.5}
+   name Noise2
+   xpos 950
+   ypos -274
+  }
+push $Nfd087f80
+  Noise {
+   size {{parent.frequency} {size.0*pixel_aspect}}
+   zoffset {{x}}
+   center {960 453.5}
+   name Noise1
+   xpos 840
+   ypos -274
+  }
+  Copy {
+   inputs 2
+   from0 rgba.green
+   to0 rgba.green
+   name Copy2
+   xpos 840
+   ypos -164
+  }
+push $Nfd0836b0
+  Group {
+   name Voronoy
+   xpos 620
+   ypos -274
+   addUserKnob {20 cellnoise l "Cell Noise"}
+   addUserKnob {6 use_gpu l "use gpu" t "Faster calculations, may not work on all computers. Disable to switch to CPU." -STARTLINE}
+   use_gpu true
+   addUserKnob {26 ""}
+   addUserKnob {7 size R 5 100}
+   size {{parent.parent.cell_size}}
+   addUserKnob {7 z t "This knob must be animated if you want it to change over time."}
+   z {{x*5}}
+  }
+   Input {
+    inputs 0
+    name Input1
+    label "\[value number]"
+    xpos 290
+    ypos -112
+   }
+   BlinkScript {
+    recompileCount 3
+    ProgramGroup 1
+    KernelDescription "2 \"VoronoiNoise\" iterate pixelWise 7d589a2db198a4e12b6e39fdaf183a0a1e60026c661ce56f76fb652287cd312b 2 \"src\" Read Point \"dst\" Write Point 4 \"Range\" Float 1 AABAQA== \"Dark Colour\" Float 4 AAAAAAAAAAAAAAAAAACAPw== \"Light Colour\" Float 4 AACAPwAAgD8AAIA/AACAPw== \"transform\" Float 16 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA== 4 \"range\" 1 1 \"dark_col\" 4 1 \"light_col\" 4 1 \"transform\" 16 1 4 \"fRange\" Float 1 1 AAAAAA== \"iRange\" Int 1 1 AAAAAA== \"transform_inv\" Float 16 1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA== \"z\" Float 1 1 AAAAAA=="
+    kernelSource "// https://aftbit.com/cell-noise-2/\n\n# define MAX_DISTANCE_ARRAY 12\n\n// C++11\nconst uint rand_multiplier = 48271;\nconst uint rand_increment  = 0;\nconst uint rand_modulus    = 2147483647;\n\nstatic int lcgRandom(int seed)\n\{\n  return abs((seed * rand_multiplier + rand_increment) % rand_modulus);\n\}\n\n// FNV Hash\nconst uint OFFSET_BASIS = 2166136261;\nconst uint FNV_PRIME = 16777619;\n\nstatic uint hash(uint i, uint j, uint k)\n\{\n  return ((((((OFFSET_BASIS ^ i) * FNV_PRIME) ^ j) * FNV_PRIME) ^ k) * FNV_PRIME);\n\}\n\n// Poisson Distribution\nconst uint one   =  393325350;\nconst uint two   = 1022645910;\nconst uint three = 1861739990;\nconst uint four  = 2700834071;\nconst uint five  = 3372109335;\nconst uint six   = 3819626178;\nconst uint seven = 4075350088;\nconst uint eight = 4203212043;\n\nstatic uint probLookup(uint value)\n\{\n  if (value < one) return 1;\n  if (value < two) return 2;\n  if (value < three) return 3;\n  if (value < four) return 4;\n  if (value < five) return 5;\n  if (value < six) return 6;\n  if (value < seven) return 7;\n  if (value < eight) return 8;\n  return 9;\n\}\n\n// Insertion Array\nstatic void insert(float arr\[], int idArr\[], float value, int id)\n\{\n  float temp;\n  int tempID;\n  for (int i = MAX_DISTANCE_ARRAY - 1; i >= 0; i--)\n  \{\n    if (value > arr\[i])\n      break;\n    temp = arr\[i];\n    tempID = idArr\[i];\n    arr\[i] = value;\n    idArr\[i] = id;\n    if (i + 1 < MAX_DISTANCE_ARRAY)\n    \{\n      arr\[i + 1] = temp;\n      idArr\[i + 1] = tempID;\n    \}\n  \}\n\}\n\n\n// Blink Kernel\nkernel VoronoiNoise : ImageComputationKernel<ePixelWise>\n\{\n  Image<eRead> src;\n  Image<eWrite> dst;\n\n  param:\n    float range;\n    float4 dark_col;\n    float4 light_col;\n    float4x4 transform;\n\n  local:\n    float fRange;\n    int iRange;\n    float4x4 transform_inv;\n    float z;\n\n  void define()\n  \{\n    defineParam(range, \"Range\", 3.0f);\n    defineParam(dark_col, \"Dark Colour\", float4(0.0f, 0.0f, 0.0f, 1.0f));\n    defineParam(light_col, \"Light Colour\", float4(1.0f, 1.0f, 1.0f, 1.0f));\n  \}\n\n  void init()\n  \{\n    fRange = clamp(range, 0.0f, float(MAX_DISTANCE_ARRAY - 2));\n    iRange = int(fRange);\n    transform_inv = transform.invert();\n    z = transform_inv\[2]\[3];\n  \}\n\n  static float3 multVectMatrix(float3 vec, float4x4 M)\n  \{\n    float3 out = float3(\n      vec.x * M\[0]\[0] + vec.y * M\[0]\[1] + vec.z * M\[0]\[2] + M\[0]\[3],\n      vec.x * M\[1]\[0] + vec.y * M\[1]\[1] + vec.z * M\[1]\[2] + M\[1]\[3],\n      vec.x * M\[2]\[0] + vec.y * M\[2]\[1] + vec.z * M\[2]\[2] + M\[2]\[3]\n    );\n\n    return out;\n  \}\n\n  float4 getColour(float a) \{\n    return dark_col * (1 - a) + light_col * a;\n  \}\n\n  void process(int2 pos)\n  \{\n\n    //Declare some values for later use\n    int lastRandom, id, numberFeaturePoints;\n    float3 randomDiff, featurePoint;\n    int cubeX, cubeY, cubeZ;\n\n    float distanceArray\[MAX_DISTANCE_ARRAY];\n    int idArray\[MAX_DISTANCE_ARRAY];\n\n    // Initialize values in distance array to large values\n    for (int i = 0; i < MAX_DISTANCE_ARRAY; i++)\n        distanceArray\[i] = 6666;\n\n    float3 input = float3(float(pos.x), float(pos.y), z);\n    input = multVectMatrix(input, transform_inv);\n\n    // Determine which cube the evaluation point is in\n    int evalCubeX = floor(input.x);\n    int evalCubeY = floor(input.y);\n    int evalCubeZ = floor(input.z);\n\n    for (int i = -1; i < 2; ++i)\n    \{\n      for (int j = -1; j < 2; ++j)\n      \{\n        for (int k = -1; k < 2; ++k)\n        \{\n            cubeX = evalCubeX + i;\n            cubeY = evalCubeY + j;\n            cubeZ = evalCubeZ + k;\n\n            // Generate a reproducible random number generator for the cube\n            lastRandom = lcgRandom(hash(cubeX, cubeY, cubeZ));\n            id = lastRandom;\n            // Determine how many feature points are in the cube\n            numberFeaturePoints = probLookup(lastRandom);\n            // Check each feature point\n            for (uint l = 0; l < numberFeaturePoints; ++l)\n            \{\n              lastRandom = lcgRandom(lastRandom);\n              randomDiff.x = float(lastRandom) / rand_modulus;\n\n              lastRandom = lcgRandom(lastRandom);\n              randomDiff.y = float(lastRandom) / rand_modulus;\n\n              lastRandom = lcgRandom(lastRandom);\n              randomDiff.z = float(lastRandom) / rand_modulus;\n\n              featurePoint = float3(randomDiff.x + float(cubeX), randomDiff.y + float(cubeY), randomDiff.z + float(cubeZ));\n\n              insert(distanceArray, idArray, length(input - featurePoint), id+l);\n            \}\n        \}\n      \}\n    \}\n\n    float3 col = float3(float(idArray\[iRange]) / rand_modulus, 0.0f, 0.0f);\n    lastRandom = lcgRandom(idArray\[iRange]);\n    col.y = float(lastRandom) / rand_modulus;\n    lastRandom = lcgRandom(lastRandom);\n    col.z = float(lastRandom) / rand_modulus;\n\n    for(int component = 0; component < 3; component++)\n      dst(component) = col\[component];\n    dst(3) = 1.0f;\n  \}\n\n\};"
+    useGPUIfAvailable {{parent.use_gpu}}
+    rebuild ""
+    VoronoiNoise_Range 0
+    "VoronoiNoise_Dark Colour" {0 0 0 0}
+    "VoronoiNoise_Light Colour" {1 1 1 1}
+    group_VoronoiNoise_transform 1
+    VoronoiNoise_transform {
+        {{parent.NoiseTransform.world_matrix} {parent.NoiseTransform.world_matrix} {parent.NoiseTransform.world_matrix} {parent.NoiseTransform.world_matrix}}
+        {{parent.NoiseTransform.world_matrix} {parent.NoiseTransform.world_matrix} {parent.NoiseTransform.world_matrix} {parent.NoiseTransform.world_matrix}}
+        {{parent.NoiseTransform.world_matrix} {parent.NoiseTransform.world_matrix} {parent.NoiseTransform.world_matrix} {parent.NoiseTransform.world_matrix}}
+        {{parent.NoiseTransform.world_matrix} {parent.NoiseTransform.world_matrix} {parent.NoiseTransform.world_matrix} {parent.NoiseTransform.world_matrix}}
+      }
+    rebuild_finalise ""
+    name VoronoiNoise
+    xpos 290
+    ypos -16
+   }
+   Output {
+    name Output1
+    xpos 290
+    ypos 86
+   }
+   Axis2 {
+    inputs 0
+    xform_order TRS
+    translate {0 0 {parent.z}}
+    scaling {1 {Input1.pixel_aspect} 1}
+    uniform_scale {{parent.size}}
+    pivot {960 480 0}
+    name NoiseTransform
+    xpos 451
+    ypos -102
+   }
+  end_group
+  Copy {
+   inputs 2
+   from0 rgba.red
+   to0 forward.u
+   from1 rgba.green
+   to1 forward.v
+   name Copy1
+   xpos 620
+   ypos -171
+  }
+  IDistort {
+   uv forward
+   uv_offset 0.25
+   uv_scale {{parent.amplitude} {uv_scale.w*pixel_aspect}}
+   filter Impulse
+   name IDistort1
+   xpos 620
+   ypos -88
+   disable {{!parent.distort}}
+  }
+  Dot {
+   name Dot5
+   xpos 654
+   ypos -6
+  }
+set Na74f8a80 [stack 0]
+  Dot {
+   name Dot8
+   xpos 874
+   ypos -6
+  }
+  Blur {
+   channels rgb
+   size {{pixel_aspect} 1}
+   name Blur1
+   label "\[value size]"
+   xpos 840
+   ypos 56
+  }
+push $Na74f8a80
+  Difference {
+   inputs 2
+   name Difference2
+   xpos 840
+   ypos 152
+  }
+  Expression {
+   channel0 {none none none rgba.alpha}
+   expr0 a>1e-9
+   channel1 none
+   channel2 none
+   channel3 none
+   name Expression2
+   xpos 840
+   ypos 230
+  }
+  Shuffle {
+   red alpha
+   green alpha
+   blue alpha
+   name Shuffle1
+   label "\[value in]:\[value out]"
+   xpos 840
+   ypos 296
+  }
+  Dot {
+   name Dot4
+   xpos 874
+   ypos 690
+  }
+push $Nfd0836b0
+  Expression {
+   expr0 (x+.5)/width
+   expr1 (y+.5)/height
+   expr2 0
+   name Generator
+   xpos 400
+   ypos -274
+  }
+  NoTimeBlur {
+   name NoTimeBlur1
+   xpos 400
+   ypos 110
+  }
+  Expression {
+   temp_name0 roiw
+   temp_expr0 Transform1.roi.x
+   temp_name1 roih
+   temp_expr1 Transform1.roi.y
+   temp_name2 distx
+   temp_expr2 Transform1.dist.x+Transform1.translate.x
+   temp_name3 disty
+   temp_expr3 Transform1.dist.y+Transform1.translate.y
+   expr0 r((x+roiw-(distx%roiw))%roiw+distx,(y+roih-(disty%roih))%roih+disty)
+   expr1 g((x+roiw-(distx%roiw))%roiw+distx,(y+roih-(disty%roih))%roih+disty)
+   channel2 none
+   channel3 none
+   name Expression3
+   xpos 400
+   ypos 190
+  }
+set Nfcfceb60 [stack 0]
+  Dot {
+   name Dot3
+   xpos 324
+   ypos 258
+  }
+push $Na74f8a80
+  NoTimeBlur {
+   name NoTimeBlur2
+   xpos 620
+   ypos 110
+  }
+  Transform {
+   translate {{floor((x*size)%1*(size+1))-int(size/2) x1082 0} {floor(x%1*(size+1))-int(size/2) x1082 0}}
+   center {1064 714}
+   filter Impulse
+   black_outside false
+   name Transform1
+   xpos 620
+   ypos 254
+   addUserKnob {20 User}
+   addUserKnob {12 roi}
+   roi {{abs(parent.box.x-parent.box.r)} {abs(parent.box.y-parent.box.t)}}
+   addUserKnob {12 dist}
+   dist {{min(parent.box.x,parent.box.r)} {min(parent.box.y,parent.box.t)}}
+   addUserKnob {3 size}
+   size {{parent.edge_blend_size}}
+  }
+push $Nfcfceb60
+  MergeExpression {
+   inputs 2
+   temp_name0 roiw
+   temp_expr0 Transform1.roi.x
+   temp_name1 roih
+   temp_expr1 Transform1.roi.y
+   temp_name2 distx
+   temp_expr2 Transform1.dist.x
+   temp_name3 disty
+   temp_expr3 Transform1.dist.y
+   expr0 Br((x+Ar*width)%roiw+distx,(y+Ag*height)%roih+disty)
+   expr1 Bg((x+Ar*width)%roiw+distx,(y+Ab*height)%roih+disty)
+   name MergeExpression2
+   xpos 400
+   ypos 254
+  }
+  CopyBBox {
+   inputs 2
+   name CopyBBox1
+   xpos 400
+   ypos 326
+  }
+  Input {
+   inputs 0
+   name Input1
+   xpos 180
+   ypos -437
+  }
+  TimeWarp {
+   lookup {{parent.f}}
+   time ""
+   name TimeWarp1
+   xpos 180
+   ypos 14
+   disable {{!parent.use_range}}
+  }
+  NoTimeBlur {
+   name NoTimeBlur3
+   xpos 180
+   ypos 110
+  }
+  STMap {
+   inputs 2
+   uv rgb
+   filter Impulse
+   name STMap1
+   xpos 180
+   ypos 320
+  }
+  TimeWarp {
+   lookup {{parent.f}}
+   time ""
+   name TimeWarp2
+   xpos 180
+   ypos 364
+   disable {{!parent.use_range}}
+  }
+  Dot {
+   name Dot9
+   xpos 214
+   ypos 409
+  }
+set Nfccebf50 [stack 0]
+  TimeBlur {
+   divisions {{Transform1.size==1?2:pow2(Transform1.size)}}
+   shutter 1
+   shutteroffset start
+   shuttercustomoffset 0
+   name TimeBlur1
+   xpos 180
+   ypos 464
+  }
+set Nfccf1210 [stack 0]
+push $Nfccebf50
+  Dot {
+   name Dot1
+   xpos -6
+   ypos 409
+  }
+  Difference {
+   inputs 2
+   name Difference1
+   xpos -40
+   ypos 458
+  }
+  Expression {
+   channel0 {none none none rgba.alpha}
+   expr0 a>1e-10
+   channel1 none
+   channel2 none
+   channel3 none
+   name Expression1
+   xpos -40
+   ypos 560
+  }
+  Dot {
+   name Dot2
+   xpos -6
+   ypos 636
+  }
+push $Nfccf1210
+  Grade {
+   inputs 1+1
+   white 1.3
+   black_clamp false
+   name Grade1
+   xpos 180
+   ypos 632
+  }
+  Merge2 {
+   inputs 2
+   name Merge1
+   xpos 180
+   ypos 686
+   disable {{!parent.overlay_pattern}}
+  }
+  Output {
+   name Output1
+   xpos 180
+   ypos 782
+  }
+ end_group
+ Multiply {
+  inputs 1+1
+  channels rgb
+  value 1.8
+  maskChannelMask {{{parent.Merge9.maskChannelMask}}}
+  invert_mask {{!Merge9.invert_mask}}
+  name Multiply7
+  xpos 70
+  ypos 2483
+  disable {{"!maskChannelMask || !\[exists parent.input3.name]"}}
+ }
+ Dot {
+  name Dot23
+  xpos 104
+  ypos 2559
+ }
+push $Nfd3a85f0
+push $Nfd39aec0
+push $Nfd1cad90
+ Multiply {
+  inputs 1+1
+  channels rgb
+  value {{parent.RGB} {parent.RGB} {parent.RGB} 1}
+  maskChannelMask -rgba.green
+  name Multiply1
+  xpos 290
+  ypos 2006
+ }
+ Multiply {
+  inputs 1+1
+  channels rgb
+  value 1.8
+  maskChannelMask {{{parent.Merge9.maskChannelMask}}}
+  invert_mask {{parent.Merge9.invert_mask}}
+  name Multiply2
+  xpos 290
+  ypos 2483
+  disable {{"!maskChannelMask || (!parent.scatter && !parent.external_grain)"}}
+ }
+ Merge2 {
+  inputs 2+1
+  operation copy
+  bbox B
+  Achannels rgb
+  Bchannels rgb
+  output rgb
+  name Merge9
+  xpos 290
+  ypos 2555
+  disable {{"!(parent.scatter || parent.external_grain)"}}
+ }
+push $Nfd38d750
+ Dot {
+  name Dot40
+  xpos 874
+  ypos 258
+ }
+push $Nfd2e2ea0
+ Dot {
+  name Dot34
+  xpos 624
+  ypos 378
+ }
+ Multiply {
+  inputs 1+1
+  channels rgb
+  value 0
+  maskChannelMask {{{parent.Multiply1.maskChannelMask}}}
+  maskChannelInput -rgba.alpha
+  name Multiply8
+  xpos 840
+  ypos 374
+ }
+ Input {
+  inputs 0
+  name COMP
+  label "\[value number]"
+  note_font_size 30
+  xpos 950
+  ypos -440
+ }
+ Merge2 {
+  inputs 2
+  operation from
+  bbox B
+  Achannels rgb
+  Bchannels rgb
+  output rgb
+  name Merge8
+  xpos 950
+  ypos 374
+ }
+ Dot {
+  name Dot18
+  xpos 984
+  ypos 2730
+ }
+set Nfc1e0400 [stack 0]
+clone $Cfd2fc780 {
+  xpos 730
+  ypos 2726
+  selected false
+ }
+ Multiply {
+  channels rgb
+  value {{1/Expression.temp_expr0}}
+  name Multiply5
+  xpos 400
+  ypos 2726
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  bbox B
+  Achannels rgb
+  Bchannels rgb
+  output rgb
+  name Merge1
+  xpos 290
+  ypos 2726
+ }
+ Dot {
+  name Dot8
+  xpos 324
+  ypos 2922
+ }
+set Nfc1e4a90 [stack 0]
+push $Nfd1cfa20
+ Dot {
+  name Dot14
+  xpos -446
+  ypos 1650
+ }
+ Dot {
+  name Dot12
+  xpos -446
+  ypos 3018
+ }
+push $Nfd1b6790
+ Dot {
+  name Dot9
+  xpos -666
+  ypos 1386
+ }
+ Dot {
+  name Dot10
+  xpos -666
+  ypos 3162
+ }
+push $Nfc1e4a90
+push $Nfc1e0400
+ Merge2 {
+  inputs 2
+  operation plus
+  bbox B
+  Achannels rgb
+  Bchannels rgb
+  output rgb
+  name Merge3
+  xpos 950
+  ypos 2918
+ }
+ Switch {
+  inputs 4
+  which {{output}}
+  name Output
+  xpos 950
+  ypos 3152
+  addUserKnob {20 User}
+  addUserKnob {4 output M {"regrained comp" "original grain" "normalised grain" "adapted grain"}}
+ }
+ Output {
+  name Output1
+  xpos 950
+  ypos 3374
+ }
+push $Nfd391fa0
+ Invert {
+  name Invert2
+  xpos 400
+  ypos 1064
+  disable {{!parent.invert_1}}
+ }
+push $Nfd1b1f40
+ Dot {
+  name Dot5
+  xpos 214
+  ypos 786
+ }
+ Reformat {
+  inputs 0
+  type "to box"
+  box_width {{Dot1.width}}
+  box_height {{Dot1.height}}
+  box_fixed true
+  box_pixel_aspect {{Dot1.pixel_aspect}}
+  name Reformat1
+  xpos 70
+  ypos 686
+ }
+ Dot {
+  name Dot42
+  xpos 104
+  ypos 786
+ }
+set Na7381c50 [stack 0]
+ Copy {
+  inputs 2
+  from0 {{{parent.Copy2.from0}}}
+  to0 rgba.red
+  name Copy3
+  xpos 180
+  ypos 848
+ }
+ Expression {
+  expr0 abs(r)
+  channel1 {none none none rgba.alpha}
+  expr1 r==0
+  channel2 none
+  channel3 none
+  name Expression4
+  xpos 180
+  ypos 926
+ }
+set Na7394410 [stack 0]
+push $Nfd2f7440
+ Colorspace {
+  colorspace_out AlexaV3LogC
+  name Colorspace5
+  xpos 180
+  ypos 518
+ }
+ Clamp {
+  maximum_enable false
+  name Clamp2
+  xpos 70
+  ypos 512
+ }
+ Dot {
+  name Dot1
+  xpos -6
+  ypos 522
+ }
+set Nfcad13e0 [stack 0]
+push $Na7381c50
+ Copy {
+  inputs 2
+  from0 rgba.blue
+  to0 rgba.red
+  name Copy2
+  xpos -40
+  ypos 848
+ }
+ Expression {
+  temp_name0 min
+  temp_expr0 0
+  temp_name1 max
+  temp_expr1 1
+  channel0 {none none none rgba.alpha}
+  expr0 "r>=min && r<=max"
+  channel1 none
+  channel2 none
+  channel3 none
+  name Expression2
+  xpos -40
+  ypos 926
+ }
+ Dot {
+  name Dot4
+  xpos -6
+  ypos 1002
+ }
+ ChannelMerge {
+  inputs 2
+  operation stencil
+  name ChannelMerge2
+  xpos 70
+  ypos 985
+ }
+push $Na7394410
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy1
+  xpos 180
+  ypos 992
+ }
+ ChannelMerge {
+  inputs 2
+  A -rgba.red
+  operation multiply
+  name ChannelMerge1
+  xpos 180
+  ypos 1057
+  disable {{!A}}
+ }
+ Premult {
+  channels {rgba.red -rgba.green -rgba.blue none}
+  name Premult1
+  xpos 180
+  ypos 1142
+ }
+ TimeWarp {
+  lookup {{parent.TimeWarp1.lookup}}
+  time ""
+  filter nearest
+  name TimeWarp4
+  xpos 180
+  ypos 1190
+ }
+ FrameBlend {
+  channels {rgba.red -rgba.green -rgba.blue rgba.alpha}
+  name FrameBlend1
+  xpos 180
+  ypos 1232
+ }
+ CurveTool {
+  avgframes 0
+  channels {rgba.red -rgba.green -rgba.blue rgba.alpha}
+  ROI {0 0 {width} {height}}
+  autocropdata {480 226 1440 680}
+  name CurveTool
+  xpos 180
+  ypos 1280
+ }
+push $Nfcad13e0
+ Dot {
+  name Dot16
+  xpos -226
+  ypos 522
+ }
+ TimeWarp {
+  time ""
+  filter nearest
+  name TimeWarp1
+  xpos -260
+  ypos 686
+ }
+ CurveTool {
+  operation "Max Luma Pixel"
+  ROI {0 0 {width} {height}}
+  autocropdata {480 226 1440 680}
+  name CurveTool_Range
+  xpos -260
+  ypos 734
+ }
+end_group
+Dot {
+ name Dot45
+ label "FINAL OUTPUT"
+ note_font "Bitstream Vera Sans Bold Italic Bold Italic Bold Italic Bold Italic Bold Italic Bold Italic Bold Italic Bold Italic Bold Italic"
+ note_font_size 50
+ selected true
+ xpos 2509
+ ypos 1915
+}
