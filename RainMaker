@@ -1,0 +1,524 @@
+set cut_paste_input [stack 0]
+version 10.0 v5
+push $cut_paste_input
+Group {
+ name RainMakerAz
+ selected true
+ xpos -2440
+ ypos -10
+ addUserKnob {20 User}
+ addUserKnob {26 j_1 l Controls}
+ addUserKnob {41 Stretch T RainCtrl.Stretch}
+ addUserKnob {41 GI_1 l "Global Intensity" T RainCtrl.GI_1}
+ addUserKnob {41 Speed T RainCtrl.Speed}
+ addUserKnob {41 Rotation T RainCtrl.Rotation}
+ addUserKnob {41 Spread T RainCtrl.Spread}
+ addUserKnob {41 Gpull l "G Pull" T RainCtrl.Gpull}
+ addUserKnob {41 Seed T RainCtrl.Seed}
+ addUserKnob {26 ldc l "Large Drop controler"}
+ addUserKnob {41 L l "\"L\" ON" T RainCtrl.L}
+ addUserKnob {41 Amount l "L Amount" T RainCtrl.Amount}
+ addUserKnob {41 LMult l "L Mult" T RainCtrl.LMult}
+ addUserKnob {41 Zooom l "L Zoom" T RainCtrl.Zooom}
+ addUserKnob {26 h l "Medium Drop controler"}
+ addUserKnob {41 M l "\"M\" ON" T RainCtrl.M}
+ addUserKnob {41 Mamount l "M Amount" T RainCtrl.Mamount}
+ addUserKnob {41 MMULT l "M Mult" T RainCtrl.MMULT}
+ addUserKnob {41 mzoom l "M Zoom" T RainCtrl.mzoom}
+ addUserKnob {26 k l "Small Drop controler"}
+ addUserKnob {41 S l "\"S\" ON" T RainCtrl.S}
+ addUserKnob {41 Samount l "S Amount" T RainCtrl.Samount}
+ addUserKnob {41 SMULT l "S Mult" T RainCtrl.SMULT}
+ addUserKnob {41 Szoom l "S Zoom" T RainCtrl.Szoom}
+ addUserKnob {26 fjk l "Far Drop control"}
+ addUserKnob {41 FON l "\"F\" ON" T RainCtrl.FON}
+ addUserKnob {41 Famount l "F Amount" T RainCtrl.Famount}
+ addUserKnob {41 Fmult l "F Mult" T RainCtrl.Fmult}
+ addUserKnob {41 FZoom l "F Zoom" T RainCtrl.FZoom}
+ addUserKnob {26 j l "" +STARTLINE}
+ addUserKnob {26 sign l "" +STARTLINE T "v1.0 - Az. @Nozon"}
+}
+ Input {
+  inputs 0
+  name Input1
+  xpos -634
+  ypos 328
+ }
+ Dot {
+  name Dot7
+  xpos -603
+  ypos 390
+ }
+set Ne5fec000 [stack 0]
+push $Ne5fec000
+ Remove {
+  name Remove1
+  xpos -434
+  ypos 382
+ }
+ Dot {
+  name Dot2
+  xpos -303
+  ypos 389
+ }
+set Nd4ed3800 [stack 0]
+ Noise {
+  size {{10*parent.RainCtrl.Zooom}}
+  zoffset {{RainCtrl.Seed}}
+  octaves 20
+  lacunarity 1.2
+  gamma {{0.02*RainCtrl.Amount}}
+  translate {{sin(radians(RainCtrl.Rotation))*frame*20*RainCtrl.Speed} {-cos(radians(RainCtrl.Rotation))*frame*20*RainCtrl.Speed}}
+  rotate {{parent.RainCtrl.Rotation}}
+  scale {{20*RainCtrl.Stretch.w} {379*RainCtrl.Stretch.h}}
+  center {1289 540}
+  name LARGE1
+  xpos -334
+  ypos 509
+  disable {{!parent.RainCtrl.L x1061 1}}
+  addUserKnob {20 RotateMenu}
+  addUserKnob {16 speed}
+  speed 1
+  addUserKnob {16 CRot l rotate}
+  CRot 90
+ }
+ Noise {
+  size {{20*parent.RainCtrl.Zooom}}
+  zoffset {{RainCtrl.Seed}}
+  octaves 20
+  lacunarity 1.2
+  gamma {{0.02*RainCtrl.Amount}}
+  translate {{sin(radians(RainCtrl.Rotation+.5*RainCtrl.Spread))*frame*20*RainCtrl.Speed} {-cos(radians(RainCtrl.Rotation+.5*RainCtrl.Spread))*frame*20*RainCtrl.Speed}}
+  rotate {{parent.RainCtrl.Rotation+.5*RainCtrl.Spread}}
+  scale {{20*RainCtrl.Stretch.w} {379*RainCtrl.Stretch.h}}
+  center {1289 540}
+  name LARGE4
+  xpos -334
+  ypos 571
+  disable {{!parent.RainCtrl.L x1061 1}}
+  addUserKnob {20 RotateMenu}
+  addUserKnob {16 speed}
+  speed 1
+  addUserKnob {16 CRot l rotate}
+  CRot 90
+ }
+ Noise {
+  size {{8*parent.RainCtrl.Zooom}}
+  zoffset {{RainCtrl.Seed+1}}
+  lacunarity 1.2
+  gamma {{0.02*RainCtrl.Amount}}
+  translate {{sin(radians(RainCtrl.Rotation+RainCtrl.Spread))*frame*16*RainCtrl.Speed} {-cos(radians(RainCtrl.Rotation+RainCtrl.Spread))*frame*16*RainCtrl.Speed}}
+  rotate {{parent.RainCtrl.Rotation+(RainCtrl.Spread)}}
+  scale {{15*RainCtrl.Stretch.w} {379*RainCtrl.Stretch.h}}
+  center {1289 540}
+  name LARGE2
+  xpos -334
+  ypos 628
+  disable {{!parent.RainCtrl.L x1061 1 x1078 1 x1087 1}}
+  addUserKnob {20 RotateMenu}
+  addUserKnob {16 speed}
+  speed 1
+  addUserKnob {16 CRot l rotate}
+ }
+ Noise {
+  size {{10*parent.RainCtrl.Zooom}}
+  zoffset {{RainCtrl.Seed+2}}
+  lacunarity 1.2
+  gamma {{0.02*RainCtrl.Amount}}
+  translate {{sin(radians(RainCtrl.Rotation-RainCtrl.Spread))*frame*18*RainCtrl.Speed} {-cos(radians(RainCtrl.Rotation-RainCtrl.Spread))*frame*18*RainCtrl.Speed}}
+  rotate {{parent.RainCtrl.Rotation-(RainCtrl.Spread)}}
+  scale {{15*RainCtrl.Stretch.w} {379*RainCtrl.Stretch.h}}
+  center {1289 540}
+  name LARGE3
+  xpos -334
+  ypos 702
+  disable {{!parent.RainCtrl.L x1061 1 x1078 1 x1087 1}}
+  addUserKnob {20 RotateMenu}
+  addUserKnob {16 speed}
+  speed 1
+  addUserKnob {16 CRot l rotate}
+ }
+ Multiply {
+  value {{parent.RainCtrl.LMult}}
+  name LARGE_MULTIPLY
+  xpos -334
+  ypos 862
+ }
+ Clamp {
+  name Clamp1
+  xpos -334
+  ypos 922
+ }
+push $Nd4ed3800
+ Dot {
+  name Dot3
+  xpos -3
+  ypos 389
+ }
+set Nc06dfc00 [stack 0]
+ Noise {
+  opacity 0.4
+  size {{8*parent.RainCtrl.mzoom}}
+  zoffset {{RainCtrl.Seed+3}}
+  lacunarity 1.3
+  gamma {{0.020*RainCtrl.Mamount}}
+  translate {{sin(radians(RainCtrl.Rotation))*frame*6*RainCtrl.Speed} {-cos(radians(RainCtrl.Rotation))*frame*6*RainCtrl.Speed}}
+  rotate {{parent.RainCtrl.Rotation x1070 -110}}
+  scale {{6*RainCtrl.Stretch.w} {220*RainCtrl.Stretch.h}}
+  skewX {{-0.05*RainCtrl.Gpull}}
+  center {1289 540}
+  xrotate 40
+  name MED1
+  xpos -34
+  ypos 508
+  disable {{!parent.RainCtrl.M x1061 1}}
+  addUserKnob {20 RotateMenu}
+  addUserKnob {16 speed}
+  speed 1
+  addUserKnob {16 CRot l rotate}
+  CRot 90
+ }
+ Noise {
+  opacity 0.4
+  size {{6*parent.RainCtrl.mzoom}}
+  zoffset {{RainCtrl.Seed+5}}
+  lacunarity 1.2
+  gamma {{0.020*RainCtrl.Mamount}}
+  translate {{sin(radians(RainCtrl.Rotation+RainCtrl.Spread))*frame*8*RainCtrl.Speed} {-cos(radians(RainCtrl.Rotation+RainCtrl.Spread))*frame*8*RainCtrl.Speed}}
+  rotate {{parent.RainCtrl.Rotation+(RainCtrl.Spread)}}
+  scale {{9*RainCtrl.Stretch.w} {200*RainCtrl.Stretch.h}}
+  skewX {{-0.05*RainCtrl.Gpull}}
+  center {1289 540}
+  name MED2
+  xpos -34
+  ypos 556
+  disable {{!parent.RainCtrl.M x1061 1 x1078 1 x1087 1}}
+  addUserKnob {20 RotateMenu}
+  addUserKnob {16 speed}
+  speed 1
+  addUserKnob {16 CRot l rotate}
+ }
+ Noise {
+  opacity 0.4
+  size {{4*parent.RainCtrl.mzoom}}
+  zoffset {{RainCtrl.Seed+5}}
+  lacunarity 1.2
+  gamma {{0.020*RainCtrl.Mamount}}
+  translate {{sin(radians(RainCtrl.Rotation-RainCtrl.Spread))*frame*8*RainCtrl.Speed} {-cos(radians(RainCtrl.Rotation-RainCtrl.Spread))*frame*8*RainCtrl.Speed}}
+  rotate {{parent.RainCtrl.Rotation-(RainCtrl.Spread)}}
+  scale {{9*RainCtrl.Stretch.w} {300*RainCtrl.Stretch.h}}
+  skewX {{-0.05*RainCtrl.Gpull}}
+  center {1289 540}
+  name MED4
+  xpos -34
+  ypos 626
+  disable {{!parent.RainCtrl.M x1054 1 x1061 1 x1078 1 x1087 1}}
+  addUserKnob {20 RotateMenu}
+  addUserKnob {16 speed}
+  speed 1
+  addUserKnob {16 CRot l rotate}
+ }
+set Nc06df000 [stack 0]
+ Noise {
+  opacity 0.4
+  size {{6*parent.RainCtrl.mzoom}}
+  zoffset {{RainCtrl.Seed+6}}
+  lacunarity 1.2
+  gamma {{0.020*RainCtrl.Mamount}}
+  translate {{sin(radians(RainCtrl.Rotation-(.5*RainCtrl.Spread)))*frame*10*RainCtrl.Speed} {-cos(radians(RainCtrl.Rotation-(.5*RainCtrl.Spread)))*frame*10*RainCtrl.Speed}}
+  rotate {{parent.RainCtrl.Rotation-(.5*RainCtrl.Spread)}}
+  scale {{8*RainCtrl.Stretch.w} {180*RainCtrl.Stretch.h}}
+  skewX {{-0.05*RainCtrl.Gpull}}
+  center {1289 540}
+  name MED3
+  xpos -34
+  ypos 726
+  disable {{!parent.RainCtrl.M x1042 1 x1061 1 x1078 1 x1087 1 x1092 1 x1104 1}}
+  addUserKnob {20 RotateMenu}
+  addUserKnob {16 speed}
+  speed 1
+  addUserKnob {16 CRot l rotate}
+ }
+ Multiply {
+  value {{parent.RainCtrl.MMULT}}
+  name MED_MULTIPLY
+  xpos -34
+  ypos 862
+ }
+ Clamp {
+  name Clamp2
+  xpos -34
+  ypos 922
+ }
+push $Nc06dfc00
+ Dot {
+  name Dot4
+  xpos 297
+  ypos 389
+ }
+set Nc06de000 [stack 0]
+ Noise {
+  opacity 0.1
+  size {{7*parent.RainCtrl.Szoom}}
+  zoffset {{RainCtrl.Seed+1}}
+  lacunarity 1.2
+  gamma {{0.03*RainCtrl.Samount}}
+  translate {{sin(radians(RainCtrl.Rotation))*frame*5*RainCtrl.Speed} {-cos(radians(RainCtrl.Rotation))*frame*5*RainCtrl.Speed}}
+  rotate {{parent.RainCtrl.Rotation x1013 -126}}
+  scale {{2*RainCtrl.Stretch.w} {60*RainCtrl.Stretch.h}}
+  skewX {{-0.1*RainCtrl.Gpull}}
+  center {1289 540}
+  xrotate 40
+  name SMALL1
+  xpos 266
+  ypos 508
+  disable {{!parent.RainCtrl.S x1019 1 x1061 1 x1085 1 x1102 1}}
+  addUserKnob {20 RotateMenu}
+  addUserKnob {16 speed}
+  speed 1
+  addUserKnob {16 CRot l rotate}
+  CRot 90
+ }
+ Noise {
+  opacity 0.1
+  size {{6*parent.RainCtrl.Szoom}}
+  zoffset {{RainCtrl.Seed+7}}
+  lacunarity 1.2
+  gamma {{0.04*RainCtrl.Samount}}
+  translate {{sin(radians(RainCtrl.Rotation+RainCtrl.Spread))*frame*6*RainCtrl.Speed} {-cos(radians(RainCtrl.Rotation+RainCtrl.Spread))*frame*6*RainCtrl.Speed}}
+  rotate {{parent.RainCtrl.Rotation+(RainCtrl.Spread)}}
+  scale {{1*RainCtrl.Stretch.w} {70*RainCtrl.Stretch.h}}
+  skewX {{-0.1*RainCtrl.Gpull}}
+  center {1289 540}
+  xrotate 63
+  yrotate 50
+  name SMALL2
+  xpos 266
+  ypos 628
+  disable {{!parent.RainCtrl.S x1019 1 x1061 1 x1078 1 x1087 1}}
+  addUserKnob {20 RotateMenu}
+  addUserKnob {16 speed}
+  speed 1
+  addUserKnob {16 CRot l rotate}
+ }
+ Noise {
+  opacity 0.1
+  size {{2*parent.RainCtrl.mzoom}}
+  zoffset {{RainCtrl.Seed+6}}
+  lacunarity 1.2
+  gamma {{0.03*RainCtrl.Samount}}
+  translate {{sin(radians(RainCtrl.Rotation-.5*RainCtrl.Spread))*frame*5*RainCtrl.Speed} {-cos(radians(RainCtrl.Rotation-.5*RainCtrl.Spread))*frame*5*RainCtrl.Speed}}
+  rotate {{parent.RainCtrl.Rotation-(.5*RainCtrl.Spread)}}
+  scale {{1*RainCtrl.Stretch.w} {50*RainCtrl.Stretch.h}}
+  skewX {{-0.1*RainCtrl.Gpull}}
+  center {1289 540}
+  name SMALL4
+  xpos 266
+  ypos 688
+  disable {{!parent.RainCtrl.S x1019 1 x1042 1 x1061 1 x1078 1 x1087 1}}
+  addUserKnob {20 RotateMenu}
+  addUserKnob {16 speed}
+  speed 1
+  addUserKnob {16 CRot l rotate}
+ }
+ Noise {
+  opacity 0.1
+  size {{4*parent.RainCtrl.mzoom}}
+  zoffset {{RainCtrl.Seed+6}}
+  lacunarity 1.2
+  gamma {{0.03*RainCtrl.Samount}}
+  translate {{sin(radians(RainCtrl.Rotation-RainCtrl.Spread))*frame*5*RainCtrl.Speed} {-cos(radians(RainCtrl.Rotation-RainCtrl.Spread))*frame*5*RainCtrl.Speed}}
+  rotate {{parent.RainCtrl.Rotation-(RainCtrl.Spread)}}
+  scale {{1*RainCtrl.Stretch.w} {50*RainCtrl.Stretch.h}}
+  skewX {{-0.1*RainCtrl.Gpull}}
+  center {1289 540}
+  name SMALL3
+  xpos 266
+  ypos 748
+  disable {{!parent.RainCtrl.S x1019 1 x1042 1 x1061 1 x1078 1 x1087 1}}
+  addUserKnob {20 RotateMenu}
+  addUserKnob {16 speed}
+  speed 1
+  addUserKnob {16 CRot l rotate}
+ }
+ Blur {
+  size 1
+  name Blur2
+  xpos 266
+  ypos 810
+ }
+ Multiply {
+  value {{parent.RainCtrl.SMULT}}
+  name LARGE_MULTIPLY2
+  xpos 266
+  ypos 862
+ }
+ Clamp {
+  name Clamp3
+  xpos 266
+  ypos 922
+ }
+push $Nc06de000
+ Dot {
+  name Dot5
+  xpos 597
+  ypos 389
+ }
+ Noise {
+  opacity 0.1
+  size {{1*parent.RainCtrl.FZoom}}
+  zoffset {{RainCtrl.Seed+3}}
+  lacunarity 1.3
+  gamma {{0.06*RainCtrl.Famount}}
+  translate {{sin(radians(RainCtrl.Rotation))*frame*6*RainCtrl.Speed} {-cos(radians(RainCtrl.Rotation))*frame*6*RainCtrl.Speed}}
+  rotate {{parent.RainCtrl.Rotation x1013 -126}}
+  scale {{ceil(RainCtrl.Stretch.w*0.7)} {20*RainCtrl.Stretch.h}}
+  skewX {{-0.15*RainCtrl.Gpull}}
+  center {1289 540}
+  xrotate 60
+  name FAR1
+  xpos 566
+  ypos 508
+  disable {{!parent.RainCtrl.FON x1061 1}}
+  addUserKnob {20 RotateMenu}
+  addUserKnob {16 speed}
+  speed 1
+  addUserKnob {16 CRot l rotate}
+  CRot 90
+ }
+ Blur {
+  size 1
+  name Blur1
+  xpos 566
+  ypos 570
+ }
+ Multiply {
+  value {{parent.RainCtrl.Fmult}}
+  name FAR_MULTIPLY
+  xpos 566
+  ypos 862
+ }
+ Clamp {
+  name Clamp4
+  xpos 566
+  ypos 922
+ }
+ Dot {
+  name Dot1
+  xpos 597
+  ypos 1049
+ }
+ Merge2 {
+  inputs 2
+  name Merge1
+  xpos 266
+  ypos 1048
+ }
+ Merge2 {
+  inputs 2
+  name Merge3
+  xpos -34
+  ypos 1048
+ }
+ Merge2 {
+  inputs 2
+  name Merge2
+  xpos -334
+  ypos 1048
+ }
+ Multiply {
+  value {{parent.RainCtrl.GI_1} {parent.RainCtrl.GI_1} {parent.RainCtrl.GI_1} {parent.RainCtrl.GI_1}}
+  name GI
+  xpos -334
+  ypos 1162
+ }
+ Merge2 {
+  inputs 2
+  name Overlap
+  xpos -634
+  ypos 1168
+  addUserKnob {20 User}
+  addUserKnob {41 operation_1 l operation T Overlap.operation}
+ }
+set Ne6073800 [stack 0]
+ Output {
+  name Output1
+  xpos -634
+  ypos 1250
+ }
+push $Nc06df000
+push $Ne6073800
+ Viewer {
+  inputs 2
+  frame 1042
+  frame_range 1001-1119
+  viewerProcess "sRGB (default)"
+  name Viewer1
+  xpos -182
+  ypos 844
+ }
+ NoOp {
+  inputs 0
+  name RainCtrl
+  selected true
+  xpos -34
+  ypos 269
+  hide_input true
+  addUserKnob {20 Controle l controle}
+  addUserKnob {26 j_1 l Controls}
+  addUserKnob {14 Stretch R 0 100}
+  Stretch {1 1}
+  addUserKnob {19 GI_1 l "Global Intensity"}
+  GI_1 1
+  addUserKnob {6 GI_1_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {16 Speed}
+  Speed 60
+  addUserKnob {16 Rotation}
+  Rotation 10
+  addUserKnob {16 Spread}
+  Spread 2
+  addUserKnob {14 Gpull l "G Pull" R 0 100}
+  Gpull 1
+  addUserKnob {7 Seed R 1 100}
+  Seed 1
+  addUserKnob {26 ldc l "Large Drop controler"}
+  addUserKnob {6 L l "\"L\" ON" +STARTLINE}
+  L true
+  addUserKnob {7 Amount l "L Amount" R 0 10}
+  Amount 2
+  addUserKnob {7 LMult l "L Mult" t "\n" R 0 100}
+  LMult 0.2
+  addUserKnob {7 Zooom l "L Zoom" R 0 10}
+  Zooom 1.3
+  addUserKnob {26 h l "Medium Drop controler"}
+  addUserKnob {6 M l "\"M\" ON" +STARTLINE}
+  M true
+  addUserKnob {7 Mamount l "M Amount" R 0 10}
+  Mamount 1.5
+  addUserKnob {7 MMULT l "M Mult" R 0 100}
+  MMULT 1
+  addUserKnob {7 mzoom l "M Zoom" R 0 10}
+  mzoom 1
+  addUserKnob {26 k l "Small Drop controler"}
+  addUserKnob {6 S l "\"S\" ON" +STARTLINE}
+  S true
+  addUserKnob {7 Samount l "S Amount" R 0 10}
+  Samount 1.5
+  addUserKnob {7 SMULT l "S Mult" R 0 100}
+  SMULT 1
+  addUserKnob {7 Szoom l "S Zoom" R 0 10}
+  Szoom 1
+  addUserKnob {26 fjk l "Far Drop control"}
+  addUserKnob {6 FON l "\"F\" ON" +STARTLINE}
+  FON true
+  addUserKnob {7 Famount l "F Amount" R 0 10}
+  Famount 1.2
+  addUserKnob {7 Fmult l "F Mult" R 0 100}
+  Fmult 1
+  addUserKnob {7 FZoom l "F Zoom" R 0 10}
+  FZoom 1
+  addUserKnob {26 ""}
+  addUserKnob {26 ""}
+  addUserKnob {26 j l "" +STARTLINE T "Az. @Nozon"}
+ }
+end_group
