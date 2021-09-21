@@ -1,0 +1,1413 @@
+set cut_paste_input [stack 0]
+version 11.2 v5
+push 0
+push $cut_paste_input
+Group {
+inputs 2
+name LensDirt2_2
+tile_color 0x4243ff
+label v1.0
+note_font "Bitstream Vera Sans"
+selected true
+xpos 1047
+ypos 7448
+addUserKnob {20 User}
+addUserKnob {41 pulldownMenu l SHOW t "Select the element you want to view" T Switch.pulldownMenu}
+addUserKnob {26 _____line1 l "" +STARTLINE}
+addUserKnob {26 textDirt l DIRT}
+addUserKnob {41 disable_Dirt l "Disable DirtLens" T MERGE_DIRT.disable}
+addUserKnob {26 text___mask l Mask}
+addUserKnob {41 blackpoint l "Mask Blackpoint" T GradeLuminance.blackpoint}
+addUserKnob {41 whitepoint l "Mask Whitepoint" T GradeLuminance.whitepoint}
+addUserKnob {41 DirtMaskBlur_1 l "Mask Blur" T NoOp_CTRL.DirtMaskBlur}
+addUserKnob {26 text_____Adjust l Adjust}
+addUserKnob {41 dirtIntensity l Intensity T Dirt_Intensity.value}
+addUserKnob {41 DirtHueRotation l "Hue Rotation" T HueShift_DIRT.hue_rotation}
+addUserKnob {41 defocus l Defocus T Defocus1.defocus}
+addUserKnob {41 jitterSizeDirt l "Jitter Size" T NoOp_CTRL.jitterSizeDirt}
+addUserKnob {26 _____line2 l "" +STARTLINE}
+addUserKnob {26 textConvolve l CONVOLVE}
+addUserKnob {41 disableConvolve l "Disable Convolve" T MERGE_CONVOLVE.disable}
+addUserKnob {26 text_____maskConvolve l Mask}
+addUserKnob {41 blackpoint_1 l "Mask Blackpoint" T Grade55.blackpoint}
+addUserKnob {41 whitepoint_1 l "Mask Whitepoint" T Grade55.whitepoint}
+addUserKnob {26 text_____adjustConvolve l Adjust}
+addUserKnob {41 convolveIntensity l Intensity T Convolve_Intensity.value}
+addUserKnob {41 HueRotation l "Hue Rotation" T HueShift_convolve.hue_rotation}
+addUserKnob {41 jitterSize l "Jitter Size" T NoOp_CTRL.jitterSize}
+addUserKnob {26 _____line3 l "" +STARTLINE}
+addUserKnob {26 chomaticAbb l "CHROMATIC ABB"}
+addUserKnob {41 chormaticAbb l Intensity T Dissolve2.which}
+addUserKnob {41 redScale l "Red Scale" T GodRays_Red.scale}
+addUserKnob {41 GreenScale l "Green Scale" T GodRays_Green.scale}
+addUserKnob {41 BlueScale l "Blue Scale" T GodRays_Blue.scale}
+addUserKnob {26 _____line4 l "" +STARTLINE}
+addUserKnob {26 mask l MASK}
+addUserKnob {41 enableMask l "Enable Mask" T Switch_MASK_ON_OFF.disable}
+addUserKnob {26 ____line1 l "" +STARTLINE}
+addUserKnob  {26 info l INFO T "Everything is set up,\nPlug in your light source  (rgb luminance)\nPlug in a mask if you need to occlude the  source(optional).\nJust tweak a bit the values if needed.\nLensDirt2  v1.0"}
+}
+BackdropNode {
+inputs 0
+name BackdropNode3
+tile_color 0x3f3f3fff
+label "<center><b>\nDIRT LENS"
+note_font Arial
+note_font_size 60
+xpos -432
+ypos -118
+bdwidth 864
+bdheight 1255
+}
+BackdropNode {
+inputs 0
+name BackdropNode5
+tile_color 0x3f3f3fff
+label "<center><b>\nCONVOLVE"
+note_font Arial
+note_font_size 60
+xpos -432
+ypos 1292
+bdwidth 1484
+bdheight 1592
+}
+Input {
+inputs 0
+name LightSource
+xpos -590
+ypos -759
+number 1
+}
+Dot {
+name Input_Lightning
+label Input_Lightning
+note_font  "Bitstream Vera Sans Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold  Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold  Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold  Bold Bold Bold Bold Bold Bold Bold"
+note_font_size 30
+xpos -556
+ypos -516
+}
+Dot {
+name Dot38
+xpos -556
+ypos -396
+}
+set N22455840 [stack 0]
+Input {
+inputs 0
+name Mask
+xpos -260
+ypos -759
+}
+Dot {
+name Input_Mask
+label Input_Mask
+note_font  "Bitstream Vera Sans Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold  Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold  Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold  Bold Bold Bold Bold Bold Bold Bold Bold"
+note_font_size 30
+xpos -226
+ypos -516
+}
+Dot {
+name Dot37
+xpos -226
+ypos -446
+}
+set N22473240 [stack 0]
+push $N22473240
+Expression {
+channel0 alpha
+expr0 max(r,g,b)
+name Expression3
+xpos -150
+ypos -417
+}
+Switch {
+inputs 2
+which 1
+name Switch_AlphaVsRgb
+xpos -260
+ypos -339
+}
+Shuffle {
+red alpha
+green alpha
+blue alpha
+name Shuffle2
+xpos -260
+ypos -309
+}
+Invert {
+name Invert2
+xpos -260
+ypos -283
+disable true
+}
+push $N22455840
+Merge2 {
+inputs 2
+operation multiply
+name Merge_MASK
+xpos -480
+ypos -279
+}
+Switch {
+inputs 2
+which 1
+name Switch_MASK_ON_OFF
+xpos -590
+ypos -219
+}
+Dot {
+name Dot34
+xpos -556
+ypos 144
+}
+set N224c2440 [stack 0]
+Dot {
+name Dot2
+xpos -226
+ypos 144
+}
+set N224c6d10 [stack 0]
+Keyer {
+operation "luminance key"
+range {1 1.5 1.2 1.2}
+name Keyer8
+xpos -134
+ypos 227
+}
+push $N224c2440
+Dot {
+name input_lighting_convolve
+note_font  "Bitstream Vera Sans Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold  Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold  Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold  Bold Bold Bold Bold Bold Bold Bold"
+note_font_size 30
+xpos -556
+ypos 1404
+}
+Grade {
+white 4
+name Grade55
+xpos -260
+ypos 1401
+}
+set N224da290 [stack 0]
+Dot {
+name Dot6
+xpos -556
+ypos 1674
+}
+Dot {
+name Dot5
+xpos -556
+ypos 3984
+}
+Noise {
+inputs 0
+type turbulence
+size 15
+zoffset {{frame/10}}
+lacunarity 2.3
+gain 0.7
+center {1440 810}
+name Noise2
+xpos -150
+ypos 632
+}
+push $N224c6d10
+Expression {
+channel0 alpha
+expr0 max(r,g,b)
+name Expression1
+xpos -260
+ypos 215
+}
+Grade {
+channels alpha
+blackpoint 0.04
+whitepoint 0.56
+white_clamp true
+name GradeLuminance
+xpos -260
+ypos 245
+}
+Roto {
+curves {{{v x3f99999a}
+  {f 0}
+  {n
+   {layer Root
+    {f 2097152}
+    {t x44b40000 x444a8000}
+     {a pt1x 0 pt1y 0 pt2x 0 pt2y 0 pt3x 0 pt3y 0 pt4x 0 pt4y 0 ptex00 0  ptex01 0 ptex02 0 ptex03 0 ptex10 0 ptex11 0 ptex12 0 ptex13 0 ptex20 0  ptex21 0 ptex22 0 ptex23 0 ptex30 0 ptex31 0 ptex32 0 ptex33 0 ptof1x 0  ptof1y 0 ptof2x 0 ptof2y 0 ptof3x 0 ptof3y 0 ptof4x 0 ptof4y 0 pterr 0  ptrefset 0 ptmot x40800000 ptref 0}
+    {curvegroup Ellipse1 512 bezier
+     {{cc
+       {f 8192}
+       {px x449fa000
+        {xc35d30a8 0}
+        {x44b2d000 x42ac0000}
+        {x435d30a8 0}
+        {0 xc3cad39a}
+        {x44e4e000 x444d2000}
+        {0 x43cad398}
+        {x435d30a8 0}
+        {x44b305aa x44b0c42c}
+        {xc35d30a8 0}
+        {0 x43cad398}
+        {x4480c000 x444d2000}
+        {0 xc3cad39a}}}
+      {cc
+       {f 8192}
+       {p
+        {{{x449fa000 xc35d30a8}}
+      {{x449fa000 0}}}
+        {{{x449fa000 0}}
+      {{x449fa000 xc419c000}}}
+        {{{x449fa000 x435d30a8}}
+      {{x449fa000 0}}}
+        {{{x449fa000 0}}
+      {{x449fa000 xc3cad39a}}}
+        {{{x449fa000 x43c60000}}
+      {{x449fa000 0}}}
+        {{{x449fa000 0}}
+      {{x449fa000 x43cad398}}}
+        {{{x449fa000 x4427f4ac}}
+      {{x449fa000 xc0400000}}}
+        {{{x449fa000 0}}
+      {{x449fa000 x432adea0}}}
+        {{{x449fa000 xc4344b54}}
+      {{x449fa000 x41c80000}}}
+        {{{x449fa000 0}}
+      {{x449fa000 x43cad398}}}
+        {{{x449fa000 xc3c60000}}
+      {{x449fa000 0}}}
+        {{{x449fa000 0}}
+      {{x449fa000 xc3cad39a}}}}}}
+     {tx x449fa000 x44b2d000 x444d2000}
+      {a r 0 g 0 b 0 a 0 opc x3f400000 osw x41200000 osf 0 str 1 spx  x44b40000 spy x444a8000 sb 1 ltn x449fa000 ltm x449fa000 tt  x40e00000}}}}}}
+toolbox {selectAll {
+  { selectAll str 1 ssx 1 ssy 1 sf 1 }
+  { createBezier str 1 ssx 1 ssy 1 sf 1 sb 1 tt 4 }
+  { createBezierCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createBSpline str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createEllipse str 1 ssx 1 ssy 1 sf 1 sb 1 tt 7 }
+  { createRectangle str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangleCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { brush str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { eraser src 2 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { clone src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { reveal src 3 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { dodge src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { burn src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { blur src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { sharpen src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { smear src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+} }
+toolbar_brush_hardness 0.200000003
+toolbar_source_transform_scale {1 1}
+toolbar_source_transform_center {1440 810}
+color 0
+colorOverlay {0 0 0 0}
+opacity 0.75
+lifetime_type "all frames"
+lifetime_start 1277
+lifetime_end 1277
+motionblur_shutter_offset_type centred
+source_black_outside true
+name Roto13
+xpos -260
+ypos 321
+}
+Premult {
+name Premult1
+xpos -260
+ypos 351
+}
+Grade {
+white 150
+gamma 2
+name Grade5
+xpos -260
+ypos 351
+}
+SoftClip {
+conversion "preserve hue and brightness"
+softclip_min 2
+softclip_max 20
+name SoftClip1
+xpos -260
+ypos 381
+}
+Transform {
+scale {1.25 1}
+skewY -0.2
+center {1440 810}
+name Transform7
+xpos -260
+ypos 422
+}
+Transform {
+translate {{random(frame)*15*parent.NoOp_CTRL.jitterSize} {random(frame+100)*25*parent.NoOp_CTRL.jitterSize}}
+center {1440 810}
+name Transform20
+xpos -260
+ypos 482
+}
+Blur {
+size {{200*parent.NoOp_CTRL.DirtMaskBlur} {350*parent.NoOp_CTRL.DirtMaskBlur}}
+name Blur_DirtMask
+xpos -260
+ypos 527
+}
+PushPixL {
+inputs 2
+name PushPixL2
+label "-\nIntermediate"
+note_font  "Verdana Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold  Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold  Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold  Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold  Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold  Bold Bold Bold Bold Bold Bold Bold"
+xpos -260
+ypos 623
+push_pull Pull
+uv_scale 45
+edge_size 30
+size 0
+}
+Dot {
+name Dot26
+xpos -226
+ypos 834
+}
+set N227d3c00 [stack 0]
+Dot {
+name Dot7
+xpos -711
+ypos 834
+}
+Dot {
+name Dot3
+xpos -711
+ypos 4074
+}
+Dot {
+name Dot4
+xpos 1078
+ypos 4074
+}
+Roto {
+inputs 0
+output alpha
+curves {{{v x3f99999a}
+  {f 0}
+  {n
+   {layer Root
+    {f 2097152}
+    {t x44b40000 x444a8000}
+     {a pt1x 0 pt1y 0 pt2x 0 pt2y 0 pt3x 0 pt3y 0 pt4x 0 pt4y 0 ptex00 0  ptex01 0 ptex02 0 ptex03 0 ptex10 0 ptex11 0 ptex12 0 ptex13 0 ptex20 0  ptex21 0 ptex22 0 ptex23 0 ptex30 0 ptex31 0 ptex32 0 ptex33 0 ptof1x 0  ptof1y 0 ptof2x 0 ptof2y 0 ptof3x 0 ptof3y 0 ptof4x 0 ptof4y 0 pterr 0  ptrefset 0 ptmot x40800000 ptref 0}
+    {curvegroup Ellipse1 512 bezier
+     {{cc
+       {f 8192}
+       {px x44978000
+        {xc421f51e 0}
+        {x44aea000 x43d70001}
+        {x4421f520 0}
+        {0 xc39b77d8}
+        {x4503e000 x4454c001}
+        {0 x439b77d8}
+        {x4421f520 0}
+        {x44afa000 x44b10000}
+        {xc421f51e 0}
+        {0 x439b77d8}
+        {x44208000 x44574001}
+        {0 xc39b77d8}}}
+      {cc
+       {f 8192}
+       {p
+        {{{x44978000 xc421f51e}}
+      {{x44978000 0}}}
+        {{{x44978000 x41000000}}
+      {{x44978000 xc3a60001}}}
+        {{{x44978000 x4421f520}}
+      {{x44978000 0}}}
+        {{{x44978000 x41200000}}
+      {{x44978000 xc44cc001}}}
+        {{{x44978000 x44050000}}
+      {{x44978000 0}}}
+        {{{x44978000 0}}
+      {{x44978000 x439b77d8}}}
+        {{{x44978000 x4461c000}}
+      {{x44978000 x42000000}}}
+        {{{x44978000 0}}
+      {{x44978000 x43970000}}}
+        {{{x44978000 xc421f51e}}
+      {{x44978000 0}}}
+        {{{x44978000 0}}
+      {{x44978000 x439b77d8}}}
+        {{{x44978000 xc4238000}}
+      {{x44978000 0}}}
+        {{{x44978000 0}}
+      {{x44978000 xc39b77d8}}}}}}
+     {tx x44978000 x44afa000 x44554000}
+     {a osw x41200000 osf 0 str 1 spx x44b40000 spy x444a8000 sb 1 ltn x44978000 ltm x44978000 tt x40e00000}}}}}}
+toolbox {selectAll {
+  { selectAll str 1 ssx 1 ssy 1 sf 1 }
+  { createBezier str 1 ssx 1 ssy 1 sf 1 sb 1 tt 4 }
+  { createBezierCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createBSpline str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createEllipse str 1 ssx 1 ssy 1 sf 1 sb 1 tt 7 }
+  { createRectangle str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangleCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { brush str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { eraser src 2 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { clone src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { reveal src 3 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { dodge src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { burn src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { blur src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { sharpen src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { smear src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+} }
+toolbar_brush_hardness 0.200000003
+toolbar_source_transform_scale {1 1}
+toolbar_source_transform_center {1440 810}
+colorOverlay {0 0 0 0}
+lifetime_type "all frames"
+lifetime_start 1212
+lifetime_end 1212
+motionblur_shutter_offset_type centred
+source_black_outside true
+name Roto14
+xpos 620
+ypos 2567
+}
+Read {
+inputs 0
+file_type png
+file /uvfx/Library/2D/Elements/Lens_iris/Iris_Blurry.png
+format "409 409 0 0 409 409 1 "
+origset true
+auto_alpha true
+name Read36
+xpos 730
+ypos 2033
+}
+Transform {
+scale 0.4
+center {204.5 204.5}
+name Transform13
+xpos 730
+ypos 2151
+}
+RotoPaint {
+curves {{{v x3f99999a}
+  {f 0}
+  {n
+   {layer Root
+    {f 2097152}
+    {t x434c8000 x434c8000}
+     {a pt1x 0 pt1y 0 pt2x 0 pt2y 0 pt3x 0 pt3y 0 pt4x 0 pt4y 0 ptex00 0  ptex01 0 ptex02 0 ptex03 0 ptex10 0 ptex11 0 ptex12 0 ptex13 0 ptex20 0  ptex21 0 ptex22 0 ptex23 0 ptex30 0 ptex31 0 ptex32 0 ptex33 0 ptof1x 0  ptof1y 0 ptof2x 0 ptof2y 0 ptof3x 0 ptof3y 0 ptof4x 0 ptof4y 0 pterr 0  ptrefset 0 ptmot x40800000 ptref 0}
+    {cubiccurve Eraser4 512 catmullrom
+     {cc
+      {f 2080}
+      {px x44a58000
+       {x42a26666 x437a6666 1}
+       {x42a26666 x43790000 1}
+       {x42a3999a x4377cccd 1}
+       {x42a53333 x43760000 1}
+       {x42a6cccd x4374cccd 1}
+       {x42a9999a x43736666 1}
+       {x42ac0000 x4372999a 1}
+       {x42aecccd x43720000 1}
+       {x42ad3333 x43713333 1}
+       {x42a9999a x4370cccd 1}
+       {x42a26666 x4370cccd 1}
+       {x429f3333 x4370cccd 1}
+       {x429b999a x4370cccd 1}
+       {x4298cccd x43713333 1}
+       {x42966666 x43713333 1}
+       {x42946666 x43713333 1}
+       {x42920000 x4370cccd 1}
+       {x42920000 x436f6666 1}
+       {x42946666 x436f0000 1}
+       {x429a0000 x436e3333 1}
+       {x429c6666 x436e3333 1}
+       {x429f3333 x436dcccd 1}}}
+     {tx x44a58000 x429fed61 x43722790}
+      {a ro 0 go 0 bo 0 ao 0 bs x4301999a bu 1 src x40000000 str 1 spx  x434c8000 spy x434c8000 sb 1 ltn x44a58000 ltm x44a58000 tt x41900000}}
+    {cubiccurve Eraser3 512 catmullrom
+     {cc
+      {f 2080}
+      {px x44a58000
+       {x429acccd x430ccccd 1}
+       {x429c6666 x43103333 1}
+       {x429d3333 x43120000 1}
+       {x42a00000 x4314999a 1}
+       {x42a00000 x4315cccd 1}
+       {x42a1999a x43180000 1}
+       {x42a1999a x43190000 1}
+       {x42a53333 x431b999a 1}
+       {x42a9999a x431e3333 1}
+       {x42ad3333 x4320cccd 1}
+       {x42b26666 x4322999a 1}
+       {x42b40000 x43236666 1}
+       {x42b6cccd x43243333 1}
+       {x42b86666 x4324cccd 1}
+       {x42bc0000 x43253333 1}
+       {x42bf3333 x43260000 1}
+       {x42bccccd x43260000 1}
+       {x42b7999a x43243333 1}
+       {x42b5999a x43230000 1}
+       {x42b06666 x4320cccd 1}
+       {x42ac0000 x431f6666 1}
+       {x42a7999a x431e3333 1}
+       {x42a60000 x431d6666 1}
+       {x42a3999a x431c6666 1}
+       {x42a00000 x431a3333 1}
+       {x429d3333 x43180000 1}
+       {x42973333 x43156666 1}
+       {x42966666 x43143333 1}}}
+     {tx x44a58000 x42a962bf x431c95f0}
+      {a ro 0 go 0 bo 0 ao 0 bs x4301999a bu 1 src x40000000 str 1 spx  x434c8000 spy x434c8000 sb 1 ltn x44a58000 ltm x44a58000 tt x41900000}}
+    {cubiccurve Eraser2 512 catmullrom
+     {cc
+      {f 2080}
+      {px x44a58000
+       {x42ac0000 x4378999a 1}
+       {x42b06666 x43743333 1}
+       {x42bd999a x436d3333 1}
+       {x42c06666 x436c0000 1}
+       {x42c4cccd x436a999a 1}}}
+     {tx x44a58000 x42b970a4 x43701eb8}
+      {a ro 0 go 0 bo 0 ao 0 bs x4301999a bu 1 src x40000000 str 1 spx  x434c8000 spy x434c8000 sb 1 ltn x44a58000 ltm x44a58000 tt x41900000}}
+    {cubiccurve Eraser1 512 catmullrom
+     {cc
+      {f 2080}
+      {px x44a58000
+       {x42b86666 x4380e666 1}
+       {x42b7999a x437d6666 1}
+       {x42b93333 x4379999a 1}
+       {x42bccccd x43776666 1}
+       {x42be6666 x4375999a 1}
+       {x42c06666 x43736666 1}
+       {x42c3999a x43713333 1}
+       {x42c66666 x436f0000 1}
+       {x42c80000 x436c0000 1}
+       {x42cacccd x43680000 1}
+       {x42cb999a x4366cccd 1}
+       {x42cb999a x4365cccd 1}
+       {x42c80000 x4366cccd 1}
+       {x42c5999a x43673333 1}
+       {x42bd999a x436a999a 1}
+       {x42bb3333 x436c6666 1}
+       {x42b6cccd x4370cccd 1}
+       {x42b26666 x4373cccd 1}
+       {x42b06666 x4374cccd 1}
+       {x42aecccd x4375999a 1}
+       {x42b1999a x43730000 1}
+       {x42b40000 x436f6666 1}
+       {x42ba0000 x4367999a 1}
+       {x42bd999a x43673333 1}
+       {x42c5999a x43640000 1}
+       {x42c80000 x43640000 1}
+       {x42cacccd x4363999a 1}
+       {x42cf3333 x43626666 1}
+       {x42d0cccd x4363999a 1}}}
+     {tx x44a58000 x42bfe749 x436dd219}
+      {a ro 0 go 0 bo 0 ao 0 bs x4301999a bu 1 src x40000000 str 1 spx  x434c8000 spy x434c8000 sb 1 ltn x44a58000 ltm x44a58000 tt x41900000}}
+    {cubiccurve Blur2 512 catmullrom
+     {cc
+      {f 2080}
+      {px x44a58000
+       {x4298cccd x4365cccd 1}
+       {x42a00000 x43650000 1}
+       {x42ab3333 x43626666 1}
+       {x42ae0000 x43616666 1}
+       {x42b40000 x435f3333 1}
+       {x42b6cccd x435d3333 1}
+       {x42ba0000 x43593333 1}
+       {x42bb3333 x43583333 1}}}
+     {tx x44a58000 x42ae4000 x435f8ccb}
+      {a ro 0 go 0 bo 0 ao 0 bs x42ab999a bt x40000000 bu 1 src 1 str 1 spx  x434c8000 spy x434c8000 sb 1 ltn x44a58000 ltm x44a58000 ep1 x40a00000  tt x41b80000}}
+    {cubiccurve Blur1 512 catmullrom
+     {cc
+      {f 2080}
+      {px x44a58000
+       {x42633333 x433f0000 1}
+       {x426d999a x433f6666 1}
+       {x42733333 x4342cccd 1}
+       {x42766666 x43443333 1}
+       {x4279999a x4348999a 1}
+       {x4279999a x434acccd 1}
+       {x427c0000 x434c6666 1}
+       {x427d999a x434e999a 1}
+       {x427f3333 x43523333 1}
+       {x42806666 x43540000 1}
+       {x42833333 x4356999a 1}
+       {x42833333 x4355999a 1}
+       {x42833333 x434f999a 1}
+       {x42833333 x434e999a 1}
+       {x42826666 x434acccd 1}
+       {x42826666 x43490000 1}
+       {x42813333 x43443333 1}
+       {x42813333 x43403333 1}
+       {x42813333 x433e0000 1}
+       {x42806666 x433a3333 1}
+       {x42806666 x43386666 1}
+       {x427f3333 x43363333 1}
+       {x427f3333 x43340000 1}
+       {x427f3333 x4331cccd 1}
+       {x427f3333 x4330999a 1}
+       {x42826666 x43310000 1}
+       {x4284cccd x43310000 1}
+       {x4287999a x43316666 1}
+       {x428acccd x4335cccd 1}}}
+     {tx x44a58000 x42800e20 x43424f73}
+      {a ro 0 go 0 bo 0 ao 0 bs x42ab999a bt x40000000 bu 1 src 1 str 1 spx  x434c8000 spy x434c8000 sb 1 ltn x44a58000 ltm x44a58000 ep1 x40a00000  tt x41b80000}}
+    {cubiccurve Clone5 512 catmullrom
+     {cc
+      {f 2080}
+      {px x44a58000
+       {x42920000 x433d999a 1}
+       {x42913333 x433c6666 1}
+       {x428d999a x433a3333 1}
+       {x428acccd x4336999a 1}
+       {x428acccd x43356666 1}
+       {x428a0000 x4331cccd 1}
+       {x42886666 x432e6666 1}
+       {x4287999a x432c999a 1}
+       {x4287999a x432acccd 1}
+       {x42866666 x4329999a 1}
+       {x4285999a x4327cccd 1}
+       {x42833333 x43270000 1}}}
+     {tx x44a58000 x4289eeef x4331599b}
+      {a ro 0 go 0 bo 0 ao 0 bs x422c0000 bu 1 src 1 stx xc3299999 sty  xc1066670 str 1 spx x434c8000 spy x434c8000 sb 1 ltn x44a58000 ltm  x44a58000 tt x41980000}}
+    {cubiccurve Clone4 512 catmullrom
+     {cc
+      {f 2080}
+      {px x44a58000
+       {x42766666 x4344999a 1}
+       {x42826666 x4344999a 1}
+       {x4284cccd x4344999a 1}
+       {x4287999a x4344999a 1}
+       {x428a0000 x4344999a 1}
+       {x428ccccd x4344999a 1}
+       {x42900000 x4344999a 1}
+       {x42920000 x4344999a 1}
+       {x42946666 x4344999a 1}
+       {x42966666 x43466666 1}
+       {x42966666 x4347999a 1}
+       {x42946666 x43483333 1}
+       {x42920000 x4348999a 1}
+       {x42913333 x4349cccd 1}
+       {x4292cccd x434b999a 1}
+       {x4293999a x434d6666 1}
+       {x42966666 x43500000 1}
+       {x42980000 x4350cccd 1}
+       {x429a0000 x43523333 1}
+       {x42a53333 x4355999a 1}
+       {x42ab3333 x43583333 1}
+       {x42ae0000 x4359999a 1}
+       {x42b1999a x435b6666 1}
+       {x42b40000 x435bcccd 1}}}
+     {tx x44a58000 x4295eeef x434bdbbc}
+      {a ro 0 go 0 bo 0 ao 0 bs x422c0000 bu 1 src 1 stx xc3299999 sty  xc1066670 str 1 spx x434c8000 spy x434c8000 sb 1 ltn x44a58000 ltm  x44a58000 tt x41980000}}
+    {cubiccurve Clone3 512 catmullrom
+     {cc
+      {f 2080}
+      {px x44a58000
+       {x42ae0000 x4343cccd 1}
+       {x42b06666 x4343cccd 1}
+       {x42b86666 x4343cccd 1}
+       {x42bb3333 x4343cccd 1}
+       {x42bd999a x4343cccd 1}
+       {x42c06666 x43436666 1}
+       {x42c4cccd x43436666 1}
+       {x42c80000 x43436666 1}
+       {x42ca0000 x43436666 1}
+       {x42cc6666 x4343cccd 1}}}
+     {tx x44a58000 x42beb852 x4343a3d8}
+      {a ro 0 go 0 bo 0 ao 0 bs x41ee6666 bu 1 src 1 stx xc3299999 sty  xc1066670 str 1 spx x434c8000 spy x434c8000 sb 1 ltn x44a58000 ltm  x44a58000 tt x41980000}}
+    {cubiccurve Clone2 512 catmullrom
+     {cc
+      {f 2080}
+      {px x44a58000
+       {x428f3333 x43450000 1}
+       {x429c6666 x43450000 1}
+       {x42a00000 x43450000 1}}}
+     {tx x44a58000 x42993333 x43450000}
+      {a ro 0 go 0 bo 0 ao 0 bs x42740000 bu 1 src 1 stx xc3299999 sty  xc1066670 str 1 spx x434c8000 spy x434c8000 sb 1 ltn x44a58000 ltm  x44a58000 tt x41980000}}
+    {cubiccurve Clone1 512 catmullrom
+     {cc
+      {f 2080}
+      {px x44a58000
+       {x423e6666 x43443333 1}
+       {x423e6666 x43460000 1}
+       {x423e6666 x43473333 1}
+       {x423ccccd x43496666 1}
+       {x423ccccd x434a6666 1}
+       {x423e6666 x434d0000 1}
+       {x423e6666 x434f3333 1}
+       {x42400000 x43516666 1}
+       {x42426666 x4352999a 1}
+       {x42440000 x4354cccd 1}
+       {x42473333 x4356999a 1}
+       {x4248cccd x43583333 1}
+       {x424ccccd x4358cccd 1}
+       {x4251999a x43593333 1}
+       {x4255999a x43593333 1}
+       {x42633333 x435a0000 1}
+       {x4268cccd x435a0000 1}
+       {x426a6666 x43570000 1}
+       {x426a6666 x4355999a 1}
+       {x42666666 x4352999a 1}
+       {x4261999a x43516666 1}
+       {x4258cccd x434e999a 1}
+       {x42533333 x434d6666 1}
+       {x424a6666 x43490000 1}
+       {x42473333 x4346cccd 1}
+       {x42426666 x43426666 1}
+       {x42426666 x43413333 1}
+       {x42426666 x433d999a 1}
+       {x42440000 x433bcccd 1}
+       {x4248cccd x43386666 1}
+       {x424ccccd x4336999a 1}
+       {x42500000 x43356666 1}
+       {x42533333 x43346666 1}
+       {x42573333 x43346666 1}
+       {x4258cccd x43356666 1}
+       {x425a6666 x43370000 1}}}
+     {tx x44a58000 x424dcccc x4349a4f9}
+      {a ro 0 go 0 bo 0 ao 0 bs x42740000 bu 1 src 1 stx xc2be6667 sty  x3ecccc00 str 1 spx x434c8000 spy x434c8000 sb 1 ltn x44a58000 ltm  x44a58000 tt x41980000}}}}}}
+toolbox {eraser {
+  { selectAll bs 129.6 src 2 str 1 ssx 1 ssy 1 sf 1 }
+  { createBezier str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createBezierCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createBSpline str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createEllipse str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangle str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangleCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { brush str 1 ssx 1 ssy 1 sf 1 sb 1 tt 17 }
+  { eraser bs 129.6 src 2 str 1 ssx 1 ssy 1 sf 1 sb 1 ltn 1324 ltm 1324 tt 18 }
+  { clone bs 66.8 src 1 stx -37.8 sty -2.40001 str 1 ssx 1 ssy 1 sf 1 sb 1 ltn 1324 ltm 1324 tt 19 }
+  { reveal src 3 str 1 ssx 1 ssy 1 sf 1 sb 1 tt 20 }
+  { dodge src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { burn src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { blur bs 85.8 src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 ltn 1324 ltm 1324 ep1 5 tt 23 }
+  { sharpen src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 tt 24 }
+  { smear src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 tt 25 }
+} }
+toolbar_brush_size 129.6000061
+toolbar_brush_hardness 0.200000003
+toolbar_lifetime_type single
+toolbar_paint_source bg
+toolbar_source_transform_scale {1 1}
+toolbar_source_transform_center {204.5 204.5}
+colorOverlay {0 0 0 0}
+paint_source foreground
+lifetime_type "all frames"
+lifetime_start 1324
+lifetime_end 1324
+brush_size 43
+brush_spacing 0.05000000075
+brush_hardness 0.200000003
+source_black_outside true
+name RotoPaint3
+xpos 730
+ypos 2181
+}
+Keyer {
+operation "luminance key"
+name Keyer9
+xpos 730
+ypos 2207
+}
+Shuffle {
+name Shuffle28
+xpos 730
+ypos 2271
+}
+push $N224da290
+Transform {
+scale {0.8 2.1}
+skewX 0.2
+center {{format.r*0.5} {format.h*0.5}}
+black_outside false
+name Transform9
+xpos -260
+ypos 1491
+}
+Shuffle {
+green red
+blue red
+alpha red
+name Shuffle27
+xpos -260
+ypos 1551
+}
+set N22a1c4f0 [stack 0]
+Dot {
+name Dot35
+xpos 544
+ypos 1554
+}
+Grade {
+blackpoint 1
+whitepoint 1.125
+white_clamp true
+name Grade60
+xpos 510
+ypos 2001
+}
+Convolve2 {
+inputs 2
+filter_channel rgba.red
+name Convolve4
+xpos 510
+ypos 2267
+}
+Grade {
+white {0.5 0.2 1 1}
+multiply 5
+name Grade59
+xpos 510
+ypos 2391
+}
+Saturation {
+saturation 0.8
+name Saturation4
+xpos 510
+ypos 2421
+}
+Transform {
+scale {1.3 1.1}
+center {{format.r*0.5+3} {format.h*0.5+7}}
+name Transform14
+xpos 510
+ypos 2481
+}
+Crop {
+box {-6 -6 {format.r+6} {format.h+6}}
+name Crop2
+xpos 510
+ypos 2522
+}
+Grade {
+inputs 1+1
+white 0.45
+gamma 1.1
+name Grade66
+xpos 510
+ypos 2571
+}
+Read {
+inputs 0
+file_type png
+file /uvfx/Library/2D/Elements/Lens_iris/Iris_Refractive.png
+format "231 231 0 0 231 231 1 "
+origset true
+auto_alpha true
+name Read69
+xpos -370
+ypos 2123
+}
+Keyer {
+operation "luminance key"
+range {0 0.1 1 1}
+name Keyer10
+xpos -370
+ypos 2237
+}
+Transform {
+scale 1.2
+center {400 400}
+name Transform12
+xpos -370
+ypos 2271
+}
+Noise {
+inputs 0
+size {1530 1730}
+zoffset {{frame+107}}
+octaves 6
+lacunarity 1
+gain 1
+gamma 0.3
+translate {-150 0}
+center {1440 810}
+name NoiseU5
+xpos -40
+ypos 2031
+}
+Grade {
+white 4
+name Grade56
+xpos -40
+ypos 2061
+}
+Invert {
+name Invert1
+xpos -40
+ypos 2087
+}
+Noise {
+inputs 0
+size {{parent.NoiseU4.size} {parent.NoiseU4.size}}
+zoffset {{55+frame*3.2}}
+octaves 9
+lacunarity 1.5
+translate {0 200}
+center {1440 810}
+name NoiseV2
+xpos 70
+ypos 1821
+}
+Noise {
+inputs 0
+size {1030 930}
+zoffset {{2*frame+10}}
+translate {-150 0}
+center {1440 810}
+name NoiseU4
+xpos -40
+ypos 1761
+}
+Copy {
+inputs 2
+from0 rgba.red
+to0 rgba.green
+name Copy11
+xpos -40
+ypos 1817
+}
+Shuffle {
+blue black
+alpha white
+name Shuffle26
+xpos -40
+ypos 1911
+}
+push $N22a1c4f0
+Grade {
+blackpoint 1.05
+whitepoint 1.15
+white_clamp true
+name Grade51
+xpos -260
+ypos 1761
+}
+Grade {
+white 50
+name Grade52
+xpos -260
+ypos 1821
+}
+Copy {
+inputs 2
+from0 rgba.red
+to0 forward.u
+from1 rgba.green
+to1 forward.v
+name Copy12
+xpos -260
+ypos 1902
+}
+IDistort {
+uv forward
+uv_scale 75
+name IDistort6
+xpos -260
+ypos 1967
+}
+Merge2 {
+inputs 2
+operation multiply
+name Merge46
+xpos -260
+ypos 2091
+}
+Convolve2 {
+inputs 2
+name Convolve3
+xpos -260
+ypos 2267
+}
+Transform {
+scale {{parent.Transform9.scale*1.05}}
+center {{format.r*0.5} {format.h*0.5-200}}
+invert_matrix true
+name Transform16
+xpos -260
+ypos 2361
+}
+Crop {
+box {-6 -6 {format.r+6} {format.h+6}}
+name Crop8
+xpos -260
+ypos 2403
+}
+Grade {
+white {0.7 1 1 1}
+multiply 0.7
+gamma {1 0.9 1 1}
+name Grade53
+xpos -260
+ypos 2451
+}
+Merge2 {
+inputs 2
+operation plus
+bbox B
+mix 0.6
+name Merge49
+xpos -260
+ypos 2571
+}
+Saturation {
+saturation 0.5
+name Saturation5
+xpos -260
+ypos 2601
+}
+HueShift {
+name HueShift_convolve
+xpos -260
+ypos 2631
+}
+Clamp {
+maximum_enable false
+name Clamp2
+xpos -260
+ypos 2687
+}
+Multiply {
+value 0.1
+name Multiply4
+xpos -260
+ypos 2717
+}
+Multiply {
+value 0.04
+name Convolve_Intensity
+xpos -260
+ypos 2777
+}
+Mirror2 {
+flip true
+flop true
+name Mirror2_1
+xpos -260
+ypos 2811
+}
+Dot {
+name Dot36
+xpos -226
+ypos 2964
+}
+Read {
+inputs 0
+file_type png
+file "/uvfx/Library/2D/Elements/Optical_flares/Optical Flares Textures/Glass/Smudgy.png"
+format "1920 1080 0 0 1920 1080 1 HD_1080"
+origset true
+name Read63
+xpos 290
+ypos 413
+}
+Grade {
+white 3
+gamma 0.9
+name Grade7
+xpos 290
+ypos 501
+}
+Read {
+inputs 0
+file_type png
+file "/uvfx/Library/2D/Elements/Optical_flares/Optical Flares Textures/Glass/Prints.png"
+format "1920 1080 0 0 1920 1080 1 HD_1080"
+origset true
+name Read13
+xpos 297
+ypos 230
+}
+Read {
+inputs 0
+file_type png
+file "/uvfx/Library/2D/Elements/Optical_flares/Optical Flares Textures/Glass/Fibers.png"
+format "1920 1080 0 0 1920 1080 1 HD_1080"
+origset true
+name Read48
+xpos 70
+ypos 143
+}
+Grade {
+name Grade9
+xpos 70
+ypos 231
+}
+Merge2 {
+inputs 2
+operation max
+name Merge16
+xpos 70
+ypos 261
+}
+Merge2 {
+inputs 2
+operation max
+name Merge19
+xpos 70
+ypos 501
+}
+Grade {
+black {0.07 0.08 0.1 0.1}
+white 5
+name Grade2
+xpos 70
+ypos 569
+}
+Saturation {
+saturation 0.8
+name Saturation3
+xpos 70
+ypos 599
+}
+ColorCorrect {
+contrast 1.7
+gamma 2.4
+midtones.gain 1.35
+highlights.gain {2.5 2.5 3.5 2.5}
+name ColorCorrect4
+xpos 70
+ypos 629
+}
+Transform {
+translate {{(random(frame)-0.5)*parent.NoOp_CTRL.jitterSizeDirt} {(random(frame+100)-0.5)*parent.NoOp_CTRL.jitterSizeDirt}}
+center {1440 810}
+name Transform1
+xpos 70
+ypos 667
+}
+Reformat {
+name Reformat7
+xpos 70
+ypos 701
+}
+HueShift {
+hue_rotation 170
+name HueShift_DIRT
+xpos 70
+ypos 741
+}
+Defocus {
+channels rgba
+defocus 28
+name Defocus1
+xpos 70
+ypos 781
+}
+push $N227d3c00
+Merge2 {
+inputs 2
+operation multiply
+name Merge17
+xpos 70
+ypos 831
+}
+TransformMasked {
+channels {rgba.red -rgba.green -rgba.blue none}
+scale {1.0018 1.001}
+center {{format.r*0.5} {format.h*0.5}}
+name Transform2
+xpos 70
+ypos 861
+}
+Multiply {
+value {{((random(frame+1000)-0.5)*0.3)+1}}
+name Multiply6
+xpos 70
+ypos 901
+}
+Multiply {
+value 0.006
+name Dirt_Intensity
+xpos 70
+ypos 939
+}
+Multiply {
+value 0.5
+name Multiply3
+xpos 70
+ypos 977
+}
+Reformat {
+inputs 0
+resize none
+name Reformat1
+xpos 1280
+ypos 790
+}
+Merge2 {
+inputs 2
+operation plus
+name MERGE_DIRT
+xpos 1280
+ypos 981
+}
+Merge2 {
+inputs 2
+operation plus
+name MERGE_CONVOLVE
+xpos 1280
+ypos 2961
+disable true
+}
+Dot {
+name Dot88
+xpos 1314
+ypos 3312
+}
+set N230d8600 [stack 0]
+Dot {
+name Dot1
+xpos 1539
+ypos 3312
+}
+set N230dcc50 [stack 0]
+Remove {
+operation keep
+channels {-rgba.red -rgba.green rgba.blue rgba.alpha}
+name Remove5
+xpos 1615
+ypos 3395
+}
+GodRays {
+channels rgba
+scale 0.64
+name GodRays_Blue
+xpos 1615
+ypos 3425
+}
+Blur {
+channels rgb
+size 2
+name BlurB
+xpos 1615
+ypos 3459
+}
+Multiply {
+channels alpha
+value 0.3333333333
+name Multiply1
+xpos 1615
+ypos 3515
+}
+push 0
+push $N230dcc50
+Remove {
+operation keep
+channels {-rgba.red rgba.green -rgba.blue rgba.alpha}
+name Remove4
+xpos 1505
+ypos 3395
+}
+GodRays {
+channels rgba
+name GodRays_Green
+xpos 1505
+ypos 3429
+}
+Blur {
+channels rgb
+name BlurG
+xpos 1505
+ypos 3459
+disable true
+}
+Multiply {
+channels alpha
+value 0.3333333333
+name Multiply2
+xpos 1505
+ypos 3515
+}
+push $N230dcc50
+Remove {
+operation keep
+channels {rgba.red -rgba.green -rgba.blue rgba.alpha}
+name Remove3
+xpos 1395
+ypos 3395
+}
+GodRays {
+channels rgba
+scale 1.08
+name GodRays_Red
+xpos 1395
+ypos 3429
+}
+Blur {
+channels rgb
+name BlurR
+xpos 1395
+ypos 3459
+disable true
+}
+Multiply {
+channels alpha
+value 0.3333333333
+name Multiply5
+xpos 1395
+ypos 3515
+}
+Merge2 {
+inputs 3+1
+operation plus
+name Merge121
+xpos 1395
+ypos 3549
+}
+push $N230d8600
+Dissolve {
+inputs 2
+name Dissolve2
+xpos 1280
+ypos 3545
+}
+Switch {
+inputs 3
+which {{pulldownMenu}}
+name Switch
+xpos 1280
+ypos 3965
+addUserKnob {20 User}
+addUserKnob {4 pulldownMenu l viewPullDownMenu M {Result "Luma Dirt" "Luma Convolve" ""}}
+}
+Crop {
+box {-10 -10 {format.r+10} {format.h+10}}
+name Crop1
+xpos 1280
+ypos 4011
+}
+Dot {
+name Dot_OUTPUT
+label OUTPUT
+note_font  "Bitstream Vera Sans Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold  Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold  Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold  Bold Bold Bold Bold Bold Bold Bold"
+note_font_size 30
+xpos 1314
+ypos 4096
+}
+Output {
+name Output1
+xpos 1280
+ypos 4201
+}
+NoOp {
+inputs 0
+name NoOp_CTRL
+xpos -420
+ypos 477
+addUserKnob {20 User}
+addUserKnob {7 DirtMaskBlur l "Mask Blur" R 0 4}
+DirtMaskBlur 2.78
+addUserKnob {7 jitterSizeDirt l "Dirt Jitter Size" R 0 2}
+jitterSizeDirt 0.64
+addUserKnob {7 jitterSize l "Convolve Jitter Size" R 0 2}
+jitterSize 1
+}
+end_group
