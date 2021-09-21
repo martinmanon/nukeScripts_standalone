@@ -1,0 +1,147 @@
+set cut_paste_input [stack 0]
+version 10.0 v6
+push $cut_paste_input
+Group {
+name HSV
+tile_color 0x4a938cff
+label "Match\ncolor"
+note_font "Bitstream Vera Sans Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold"
+note_font_size 15
+selected true
+xpos -464
+ypos 3822
+addUserKnob {20 User}
+addUserKnob {7 BlurBG R 0 500}
+addUserKnob {7 SaturationBG}
+}
+Input {
+inputs 0
+name FG
+xpos -588
+ypos -154
+}
+Log2Lin {
+operation lin2log
+name Log2Lin4
+xpos -588
+ypos 60
+}
+Dot {
+name Dot40
+label FG
+note_font_size 40
+xpos -557
+ypos 132
+}
+Colorspace {
+colorspace_in SLog
+colorspace_out HSV
+name Colorspace7
+xpos -590
+ypos 270
+}
+set N186a1d10 [stack 0]
+Dot {
+name Dot41
+xpos -229
+ypos 271
+}
+Dot {
+name Dot42
+xpos -229
+ypos 621
+}
+Input {
+inputs 0
+name BG
+xpos -700
+ypos -150
+number 1
+}
+set Nffb4e10 [stack 0]
+Blur {
+size {{BlurBG}}
+name Blur5
+xpos -700
+ypos -86
+}
+Saturation {
+saturation {{SaturationBG}}
+mode Maximum
+name Saturation5
+xpos -700
+ypos -10
+}
+Log2Lin {
+operation lin2log
+name Log2Lin2
+xpos -700
+ypos 60
+}
+Dot {
+name Dot43
+label BG
+note_font_size 40
+xpos -669
+ypos 131
+}
+Colorspace {
+colorspace_in SLog
+colorspace_out HSV
+name Colorspace3
+xpos -700
+ypos 270
+}
+Dot {
+name Dot1
+xpos -669
+ypos 411
+}
+push $N186a1d10
+ShuffleCopy {
+inputs 2
+red red
+green green
+name ShuffleCopy1
+xpos -590
+ypos 410
+}
+Colorspace {
+colorspace_in HSV
+colorspace_out SLog
+name Colorspace4
+xpos -590
+ypos 480
+}
+Log2Lin {
+name Log2Lin1
+xpos -590
+ypos 550
+}
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy4
+xpos -590
+ypos 614
+}
+set Nd112cb0 [stack 0]
+push $Nffb4e10
+Viewer {
+inputs 2
+frame 1098
+frame_range 1049-1088
+input_number 1
+gain 9.4
+name Viewer1
+xpos -326
+ypos 837
+}
+push $Nd112cb0
+Output {
+name Output1
+xpos -590
+ypos 760
+}
+end_group
